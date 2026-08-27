@@ -21,28 +21,16 @@ async function validateAuth() {
 export async function listCondominiums() {
   const organization_id = await validateAuth();
   
-  const results = await db.query.condominiums.findMany({
-    where: eq(condominiums.organization_id, organization_id),
-    orderBy: [desc(condominiums.created_at)],
-    with: {
-      condo_technical_specs: true, // We need to define relations in schema to use 'with', but Drizzle schema relation is not defined. Let's do a join or separate fetch.
-    }
-  }).catch(async () => {
-    // If relations are not defined in schema.ts, we can manually fetch them or define relations.
-    // Let's do a manual join approach since relations might not be setup in db/schema/index.ts.
-    const list = await db.select().from(condominiums)
-      .where(eq(condominiums.organization_id, organization_id))
-      .orderBy(desc(condominiums.created_at));
-      
-    const withSpecs = await Promise.all(list.map(async (condo) => {
-      const spec = await db.select().from(condo_technical_specs).where(eq(condo_technical_specs.condominium_id, condo.id)).limit(1);
-      return { ...condo, condo_technical_specs: spec[0] || null };
-    }));
+  const list = await db.select().from(condominiums)
+    .where(eq(condominiums.organization_id, organization_id))
+    .orderBy(desc(condominiums.created_at));
     
-    return withSpecs;
-  });
-
-  return results;
+  const withSpecs = await Promise.all(list.map(async (condo) => {
+    const spec = await db.select().from(condo_technical_specs).where(eq(condo_technical_specs.condominium_id, condo.id)).limit(1);
+    return { ...condo, condo_technical_specs: spec[0] || null };
+  }));
+  
+  return withSpecs;
 }
 
 export async function createCondominium(data: CreateCondominiumValues) {
@@ -78,7 +66,7 @@ export async function getCondoTechnicalSpec(condoId: string) {
     where: eq(condo_technical_specs.condominium_id, condoId),
   });
 
-  return { condo, spec };
+  return { condo, spec: spec || null };
 }
 
 export async function upsertCondoTechnicalSpec(condoId: string, data: CondoTechnicalSpecValues) {
