@@ -7,8 +7,16 @@ import { createCondominiumSchema, CreateCondominiumValues } from '@/schemas/cond
 import { createCondominium } from '@/services/condominium.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from '@/components/ui/sheet';
-import { Plus } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Plus, Building2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function CreateCondominiumSheet() {
   const [open, setOpen] = useState(false);
@@ -30,6 +38,7 @@ export function CreateCondominiumSheet() {
         await createCondominium(values);
         form.reset();
         setOpen(false);
+        toast.success('Condomínio cadastrado com sucesso!');
       } catch (err: any) {
         setError(err.message || 'Erro ao criar condomínio');
       }
@@ -37,41 +46,64 @@ export function CreateCondominiumSheet() {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger>
-        <div className="inline-flex shrink-0 items-center justify-center bg-primary text-primary-foreground hover:bg-primary/80 fixed bottom-20 right-4 md:static md:bottom-auto md:right-auto rounded-full md:rounded-md h-14 w-14 md:h-10 md:w-auto shadow-lg md:shadow-none px-4">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <div className="inline-flex shrink-0 items-center justify-center bg-indigo-600 text-white hover:bg-indigo-500 fixed bottom-6 right-6 md:static md:bottom-auto md:right-auto rounded-full md:rounded-lg h-14 w-14 md:h-10 md:w-auto shadow-xl md:shadow-none px-4 transition-all cursor-pointer">
           <Plus className="h-6 w-6 md:mr-2 md:h-4 md:w-4" />
-          <span className="hidden md:inline font-medium text-sm">Novo Condomínio</span>
+          <span className="hidden md:inline font-semibold text-sm">Novo Condomínio</span>
         </div>
-      </SheetTrigger>
-      <SheetContent side="bottom" className="md:side-right sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>Cadastrar Condomínio</SheetTitle>
-          <SheetDescription>
-            Preencha os dados básicos do novo condomínio.
-          </SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Nome do Condomínio</label>
-            <Input placeholder="Residencial Jardins" {...form.register('name')} />
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md bg-slate-950 border-slate-800 text-white p-6 rounded-2xl shadow-2xl">
+        <DialogHeader className="mb-2">
+          <DialogTitle className="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <Building2 className="w-5 h-5 text-indigo-400" /> Cadastrar Condomínio
+          </DialogTitle>
+          <DialogDescription className="text-slate-400 text-xs mt-1">
+            Preencha os dados básicos para adicionar o novo condomínio ao sistema.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-2">
+          {error && (
+            <div className="p-3 text-xs text-rose-300 bg-rose-950/60 border border-rose-800 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-300">Nome do Condomínio</label>
+            <Input
+              placeholder="Ex: Residencial Jardins"
+              {...form.register('name')}
+              className="bg-slate-900 border-slate-800 text-slate-100 text-sm focus:border-indigo-500"
+            />
             {form.formState.errors.name && (
-              <p className="text-xs text-red-500">{form.formState.errors.name.message}</p>
+              <p className="text-xs text-rose-400">{form.formState.errors.name.message}</p>
             )}
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Endereço Completo</label>
-            <Input placeholder="Rua Exemplo, 123 - Bairro" {...form.register('address')} />
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-300">Endereço Completo</label>
+            <Input
+              placeholder="Ex: Rua Exemplo, 123 - Bairro"
+              {...form.register('address')}
+              className="bg-slate-900 border-slate-800 text-slate-100 text-sm focus:border-indigo-500"
+            />
             {form.formState.errors.address && (
-              <p className="text-xs text-red-500">{form.formState.errors.address.message}</p>
+              <p className="text-xs text-rose-400">{form.formState.errors.address.message}</p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={isPending}>
+
+          <Button
+            type="submit"
+            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold mt-4 py-2.5 rounded-lg shadow-md"
+            disabled={isPending}
+          >
             {isPending ? 'Salvando...' : 'Salvar Condomínio'}
           </Button>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
