@@ -1,0 +1,23 @@
+Você é o Engenheiro Full Stack responsável pela Fase 6 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Construir o painel analítico e relatório comparativo de preços para o Síndico/Administradora, com destaque para a proposta vencedora global e visão item a item.
+
+### TAREFAS
+1. Algoritmo de Comparação (`src/services/comparison.service.ts`):
+   - Buscar a solicitação, todos os itens originais e as até 5 propostas submetidas com seus respectivos `proposal_items`.
+   - Calcular:
+     1. **Vencedor Global:** Proposta com menor `total_amount`.
+     2. **Menor Preço por Item:** Para cada item da planilha, identificar qual fornecedor ofereceu o menor `unit_price`.
+
+2. Tela do Mapa Comparativo (`src/app/(dashboard)/condominiums/[id]/requests/[requestId]/comparison/page.tsx`):
+   - **Card de Destaque:** Proposta Vencedora Global com Nome da Empresa, CNPJ, Valor Total e Badge "Menor Preço Global".
+   - **Matriz Comparativa:** Tabela lado a lado comparando as até 5 empresas coluna por coluna.
+   - **Destaque Visual:** Borda ou fundo verde suave na célula do menor valor de cada linha/item.
+   - **Resumo Fracionado:** Exibir quanto custaria a obra se o síndico contratasse o menor preço item a item vs. contratação global única.
+   - Botão para imprimir / salvar como PDF limpo via CSS `@media print`.
+
+### CRITÉRIOS DE ACEITE
+[ ] Matriz comparativa renderiza perfeitamente de 1 a 5 fornecedores.
+[ ] Menor preço global e menores preços unitários destacados corretamente.
+[ ] Visualização amigável em mobile (scroll horizontal suave) e desktop.

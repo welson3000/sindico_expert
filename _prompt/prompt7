@@ -1,0 +1,22 @@
+Você é o Engenheiro DevOps e QA Sênior responsável pela Fase 7 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Executar a validação completa de ponta a ponta, auditoria de segurança, otimização de performance mobile e preparar o projeto para deploy em produção na Vercel conectado ao banco Neon `sindico_expert`.
+
+### TAREFAS
+1. Auditoria de Segurança & Multi-tenancy:
+   - Validar se nenhuma Server Action permite acesso cruzado entre organizações diferentes.
+   - Verificar sanitização de entradas e validações Zod em 100% dos formulários.
+
+2. Otimização Mobile & Performance:
+   - Configurar meta tags viewport e suporte PWA (`manifest.json` com ícone e tema).
+   - Otimizar carregamento de imagens com `next/image` e skeletons de carregamento.
+
+3. Documentação & Deploy:
+   - Criar `README.md` completo com: Descrição da arquitetura, instruções de instalação local, guia de migrações no Neon (`sindico_expert`) e checklist de variáveis de ambiente na Vercel.
+   - Validar build de produção (`npm run build`) garantindo zero erros de lint ou TypeScript.
+
+### CRITÉRIOS DE ACEITE
+[ ] `npm run build` executado com sucesso e zero warnings críticos.
+[ ] Checklist de segurança aprovado.
+[ ] Projeto pronto para deploy contínuo GitHub -> Vercel.

@@ -1,0 +1,38 @@
+Você é o Engenheiro Full Stack responsável pela Fase 1 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Inicializar o projeto Next.js 14+ (App Router), configurar o Design System mobile-first com Tailwind CSS + Shadcn/UI e modelar o banco de dados completo no Neon PostgreSQL apontando para o database "sindico_expert" via Drizzle ORM.
+
+### TAREFAS
+1. Setup Inicial & Dependências:
+   - Configurar TypeScript, Tailwind CSS, Lucide React, Shadcn/UI (Button, Input, Card, Dialog, Sheet, Table, Badge, Tabs, Toast).
+   - Configurar Drizzle ORM, Drizzle Kit e `@neondatabase/serverless`.
+   - Configurar Zod e React Hook Form.
+
+2. Modelagem de Banco de Dados (`src/db/schema/`):
+   - `organizations`: `id` (UUID PK defaultRandom), `name` (text), `document` (text CNPJ/CPF unique), `plan_status` (text default 'TRIAL'), `created_at`, `updated_at`.
+   - `users`: `id` (UUID PK), `organization_id` (UUID FK nullable), `name` (text), `email` (text unique), `document_cnpj_cpf` (text), `password_hash` (text), `role` (enum: 'ADMIN_SINDICO', 'ADMIN_ADM', 'FORNECEDOR'), `phone` (text), `created_at`, `updated_at`.
+   - `condominiums`: `id` (UUID PK), `organization_id` (UUID FK), `name` (text), `address` (text), `created_at`, `updated_at`.
+   - `condo_technical_specs`: `id` (UUID PK), `condominium_id` (UUID FK unique), `total_floors` (integer), `floor_breakdown` (text), `facade_type` (text), `vertical_halls_count` (integer), `additional_details` (text), `created_at`, `updated_at`.
+   - `service_requests`: `id` (UUID PK), `condominium_id` (UUID FK), `title` (text), `status` (enum: 'DRAFT', 'OPEN', 'CLOSED', 'CANCELLED' default 'OPEN'), `max_suppliers` (integer default 5), `created_by` (UUID FK), `created_at`, `updated_at`.
+   - `request_sections`: `id` (UUID PK), `request_id` (UUID FK cascade), `title` (text), `description` (text), `order` (integer default 0), `created_at`.
+   - `section_photos`: `id` (UUID PK), `section_id` (UUID FK cascade), `photo_url` (text), `caption` (text), `created_at`.
+   - `request_items`: `id` (UUID PK), `request_id` (UUID FK cascade), `category_title` (text), `subcategory_title` (text), `item_description` (text), `unit` (text), `quantity` (decimal 10,2), `order` (integer default 0), `created_at`.
+   - `proposals`: `id` (UUID PK), `request_id` (UUID FK cascade), `supplier_id` (UUID FK), `supplier_name` (text), `supplier_cnpj` (text), `total_amount` (decimal 12,2), `status` (enum: 'SUBMITTED', 'ACCEPTED', 'REJECTED' default 'SUBMITTED'), `created_at`, `updated_at`.
+   - `proposal_items`: `id` (UUID PK), `proposal_id` (UUID FK cascade), `request_item_id` (UUID FK), `unit_price` (decimal 10,2), `total_price` (decimal 12,2), `created_at`.
+
+3. Configuração de Conexão & Scripts:
+   - Configurar `drizzle.config.ts` e client de conexão em `src/db/index.ts` usando `@neondatabase/serverless`.
+   - Configurar `.env.example` explicitando o banco `sindico_expert`:
+     ```env
+     DATABASE_URL="postgresql://[USER]:[PASSWORD]@[ENDPOINT].neon.tech/sindico_expert?sslmode=require"
+     NEXTAUTH_SECRET="chave-secreta-32-chars"
+     NEXTAUTH_URL="http://localhost:3000"
+     ```
+   - Criar `src/db/seed.ts` para popular dados iniciais de teste (1 organização, 1 síndico, 1 fornecedor, 1 condomínio).
+   - Garantir `.gitignore` protegendo `.env*`.
+
+### CRITÉRIOS DE ACEITE
+[ ] `npm run build` executa sem erros de TypeScript.
+[ ] Migrações Drizzle geradas para o banco Neon `sindico_expert`.
+[ ] Script de seed executável via `npm run db:seed`.

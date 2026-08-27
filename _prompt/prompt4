@@ -1,0 +1,23 @@
+Você é o Engenheiro Full Stack responsável pela Fase 4 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Construir o gerador de solicitações de serviço onde o Síndico monta o dossiê técnico com fotos tiradas pelo celular e define a planilha de itens/quantitativos (BOQ).
+
+### TAREFAS
+1. Upload de Imagens Otimizado:
+   - Configurar componente de upload com suporte direto à câmera do celular (`<input type="file" accept="image/*" capture="environment">`).
+   - Pré-visualização instantânea das imagens com opção de exclusão e legenda/descrição.
+
+2. Fluxo do Construtor de Solicitação (`src/app/(dashboard)/condominiums/[id]/requests/new/page.tsx`):
+   - **Passo 1 (Dados Gerais):** Título da solicitação (ex: "Restauração e Pintura de Fachada") e injeção automática dos dados da Ficha Técnica do Condomínio.
+   - **Passo 2 (Dossiê Fotográfico & Seções):** Permitir adicionar múltiplas seções (ex: "Fachada Norte - Trincas", "Pastilhas Descolando no Barrilete") contendo texto descritivo e galeria de fotos associadas.
+   - **Passo 3 (Planilha de Fechamento - BOQ):** Tabela dinâmica para adicionar Título da Categoria (ex: "1. Tratamento"), Subtítulo (ex: "1.1 Hidrojateamento"), Descrição do Item, Unidade de Medida (`m²`, `un`, `vb`, `m`, `kg`) e Quantidade.
+   - **Passo 4 (Revisão & Publicação):** Visualização completa do caderno de encargos gerado e botão "Publicar para Cotação" (`status = 'OPEN'`).
+
+3. Server Actions (`src/services/request.service.ts`):
+   - Criar transação com Drizzle para salvar a solicitação, seções, fotos e itens atomicamente.
+
+### CRITÉRIOS DE ACEITE
+[ ] Síndico cria solicitações complexas anexando múltiplas fotos diretamente pelo celular.
+[ ] Planilha de quantitativos dinâmica com adição/remoção de linhas em tempo real.
+[ ] Transação no banco garantindo integridade total de dados no banco `sindico_expert`.

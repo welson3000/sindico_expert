@@ -1,0 +1,23 @@
+Você é o Engenheiro Full Stack responsável pela Fase 5 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Implementar a visão do Fornecedor para visualização do dossiê técnico e preenchimento dos preços unitários na planilha, garantindo a trava de 5 fornecedores e sigilo absoluto entre concorrentes.
+
+### TAREFAS
+1. Regras de Negócio e Segurança no Backend (`src/services/proposal.service.ts`):
+   - **Trava de 5 Fornecedores:** Verificar `COUNT(proposals) WHERE request_id = X`. Se `>= 5`, rejeitar novas submissões com erro amigável.
+   - **Blind Bidding Rígido:** A query do fornecedor **NUNCA** deve retornar propostas de outros usuários. Retornar apenas a solicitação base, itens vazios para preenchimento e a proposta do próprio fornecedor (se já existir).
+   - O fornecedor pode submeter apenas 1 proposta por solicitação.
+
+2. Tela de Cotação do Fornecedor (`src/app/(portal)/quote/[requestId]/page.tsx`):
+   - Exibir Ficha Técnica do Edifício e Dossiê Fotográfico (galeria com zoom em modal para examinar detalhes e patologias).
+   - Identificação fixa no topo com Nome da Empresa e CNPJ do fornecedor logado.
+   - Planilha Interativa de Preços: Campo numérico de `Preço Unitário` por item.
+   - Cálculo automático em tempo real no cliente: `Preço Total do Item = Quantidade * Preço Unitário` e `Valor Global da Proposta = Soma dos Totais`.
+   - Botão "Enviar Proposta Comercial" com confirmação em modal.
+
+### CRITÉRIOS DE ACEITE
+[ ] Fornecedor visualiza todas as fotos e especificações sem falhas.
+[ ] Formulário calcula totais automaticamente e salva `proposal` e `proposal_items`.
+[ ] Sistema bloqueia o 6º fornecedor quando o limite de 5 for atingido.
+[ ] Nenhum dado de concorrentes vaza em responses de rede ou código fonte.

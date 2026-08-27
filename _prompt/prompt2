@@ -1,0 +1,25 @@
+Você é o Engenheiro Full Stack responsável pela Fase 2 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Implementar autenticação completa com Auth.js (NextAuth v5), controle de acesso baseado em papéis (RBAC) e o layout base responsivo com foco em smartphones.
+
+### TAREFAS
+1. Autenticação & Sessão (`src/lib/auth.ts`):
+   - Auth.js com Credentials Provider (E-mail e Senha usando `bcryptjs`).
+   - Inserir no JWT e Session: `id`, `role`, `organization_id`, `name`, `document_cnpj_cpf`.
+   - Middleware em `src/middleware.ts` protegendo rotas `/dashboard/*` e `/portal/*`.
+
+2. Telas de Autenticação (`src/app/(auth)/`):
+   - `login/page.tsx`: Formulário com validação Zod (E-mail e Senha) e redirecionamento baseado no perfil (`ADMIN` vai para `/dashboard/condominiums`, `FORNECEDOR` vai para o mural de cotações).
+   - `register/page.tsx`: Cadastro com seleção visual do tipo de conta (Síndico/Administradora ou Fornecedor), incluindo validação de CNPJ/CPF e nome da empresa.
+
+3. Shell de Navegação Mobile-First:
+   - Header fixo com identificação da Organização e Usuário logado.
+   - Bottom Navigation Bar no mobile com ícones para: Condomínios, Solicitações e Perfil.
+   - Sidebar retrátil para telas Desktop/Tablet.
+   - Feedback visual de loading com Skeleton e Toasts para notificações.
+
+### CRITÉRIOS DE ACEITE
+[ ] Login e registro funcionando com persistência no Neon DB (`sindico_expert`).
+[ ] RBAC ativo: Fornecedor bloqueado de acessar áreas administrativas.
+[ ] Layout 100% responsivo e touch-friendly em telas de 360px a 4K.

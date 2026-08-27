@@ -1,0 +1,61 @@
+Você é o Engenheiro Full Stack e Arquiteto de Software responsável pela Fase 3 do SaaS "Síndico Expert".
+
+### OBJETIVO
+Construir o módulo completo de Gestão de Condomínios e o Cadastro da Ficha Técnica Predial (Caderno de Encargos Base) no banco Neon PostgreSQL ("sindico_expert"), garantindo design Mobile-First e isolamento total multi-tenant por organization_id.
+
+---
+
+### TAREFAS DE IMPLEMENTAÇÃO
+
+1. SCHEMAS DE VALIDAÇÃO COM ZOD (`src/schemas/condominium.schema.ts`):
+   - `createCondominiumSchema`:
+     * `name`: string min 3 caracteres (Nome do Edifício/Condomínio).
+     * `address`: string min 5 caracteres (Endereço completo).
+   - `condoTechnicalSpecSchema`:
+     * `total_floors`: number integer min 1 (Ex: 13).
+     * `floor_breakdown`: string min 3 (Ex: "Térreo, 10 andares tipo, Barriletes, Caixa D'água").
+     * `facade_type`: array de strings não vazio (Opções: "Pastilha", "Textura", "Cerâmica", "Grafiato", "Pele de Vidro", "Tijolo Aparente", "Outro") salvo como string unificada ou JSON/Text no banco.
+     * `vertical_halls_count`: number integer min 1, default 1.
+     * `additional_details`: string opcional (Ex: "Elevador Atlas 8 passageiros, acesso ao barrilete por escada marinheiro").
+
+2. CAMADA DE DADOS E SERVER ACTIONS (`src/services/condominium.service.ts`):
+   - Validar a sessão do usuário com Auth.js (`auth()`) em todas as actions. Se não autenticado ou perfil for `FORNECEDOR`, disparar Unauthorized.
+   - `listCondominiums()`: Retornar apenas os condomínios onde `organization_id === session.user.organization_id`, ordenados por `created_at desc`.
+   - `createCondominium(formData)`: Validar com Zod, associar ao `organization_id` da sessão e persistir na tabela `condominiums`. Executar `revalidatePath('/dashboard/condominiums')`.
+   - `getCondoTechnicalSpec(condoId)`: Verificar se o condomínio pertence à organização do usuário. Retornar os dados do condomínio e a respectiva `condo_technical_specs` (se existir).
+   - `upsertCondoTechnicalSpec(condoId, specData)`: Validar os dados com Zod e executar operação de upsert (insert on conflict update baseado em `condominium_id`).
+
+3. INTERFACE E TELAS MOBILE-FIRST:
+   - `src/app/(dashboard)/condominiums/page.tsx`:
+     * Header com título "Meus Condomínios" e resumo de contagem.
+     * Lista de condomínios em Cards com visual limpo (Nome, Endereço, Status da Ficha Técnica: "Completa" [Badge Verde] ou "Pendente" [Badge Amarelo]).
+     * Botão Flutuante (FAB) "+" no canto inferior direito para telas mobile e botão no topo para desktop.
+     * Modal/Sheet (Shadcn/UI) para cadastro rápido do condomínio sem recarregar a página.
+     * Ações por card: "Editar Ficha Técnica" (link direto para a rota técnica) e "Ver Solicitações".
+     * Estado vazio estilizado (`EmptyState`) quando não houver condomínios cadastrados.
+   - `src/app/(dashboard)/condominiums/[id]/tech-spec/page.tsx`:
+     * Header com navegação de retorno (`< Link href="/dashboard/condominiums" >`) e nome do edifício.
+     * Formulário responsivo com React Hook Form + resolver Zod:
+       - Input numérico para "Total de Pavimentos".
+       - Input/Textarea para "Detalhamento dos Andares" (com placeholder: "Ex: Térreo, 10 andares tipo, Barriletes, Caixa d'água").
+       - Grupo de Checkboxes interativos para "Tipos de Acabamento da Fachada".
+       - Input numérico para "Quantidade de Halls de Circulação Vertical / Elevadores".
+       - Textarea rica para "Observações e Detalhes Estruturais".
+     * Botão fixo inferior no mobile: "Salvar Ficha Técnica" com feedback de loading e Sonner/Toast de sucesso.
+
+---
+
+### REGRAS DE SEGURANÇA E AMBIENTE
+* Conexão estrita com a variável `DATABASE_URL` do Neon (database `sindico_expert`).
+* Nenhuma consulta SQL direta sem validação do `organization_id` da sessão ativa.
+* Tratamento de erros com mensagens amigáveis em português e sem expor stack trace.
+
+---
+
+### CRITÉRIOS DE ACEITE
+[ ] Síndico/ADM consegue criar condomínios e os dados são salvos na tabela `condominiums` no Neon (`sindico_expert`).
+[ ] Ficha Técnica Predial salva e recupera dados corretamente com lógica de `upsert`.
+[ ] Formatos numéricos e listas de checkboxes validados via Zod no cliente e no servidor.
+[ ] Layout 100% responsivo no mobile (botão FAB, sheets e formulário adaptado para telas pequenas).
+[ ] Usuário `FORNECEDOR` é impedido de acessar essas rotas e Server Actions.
+[ ] Build (`npm run build`) executa com zero erros de TypeScript e Linting.
