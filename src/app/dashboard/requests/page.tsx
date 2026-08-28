@@ -2,12 +2,12 @@ import React from 'react';
 import { auth } from '@/lib/auth';
 import { db } from '@/db';
 import { service_requests, condominiums, proposals } from '@/db/schema';
-import { eq, count, inArray } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ClipboardList, Building2, BarChart3, Clock, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ClipboardList, Building2, BarChart3, Clock, Plus, ArrowRight } from 'lucide-react';
 
 export default async function GlobalRequestsPage() {
   const session = await auth();
@@ -61,17 +61,34 @@ export default async function GlobalRequestsPage() {
   );
 
   const openCount = enhancedRequests.filter((r) => r.status === 'OPEN').length;
+  const firstCondoId = condoList[0]?.id;
 
   return (
     <div className="space-y-8">
       {/* Cabeçalho */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 flex items-center gap-3">
-          <ClipboardList className="w-7 h-7 text-indigo-400" /> Todas as Solicitações de Serviço
-        </h1>
-        <p className="text-slate-400 text-sm mt-1">
-          Acompanhe todas as cotações abertas, propostas recebidas de fornecedores e mapas comparativos dos seus condomínios.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 flex items-center gap-3">
+            <ClipboardList className="w-7 h-7 text-indigo-400" /> Todas as Solicitações de Serviço
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Acompanhe todas as cotações abertas, propostas recebidas de fornecedores e mapas comparativos dos seus condomínios.
+          </p>
+        </div>
+
+        {firstCondoId ? (
+          <Link href={`/dashboard/condominiums/${firstCondoId}/requests/new`}>
+            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg">
+              <Plus className="w-4 h-4" /> Nova Solicitação
+            </Button>
+          </Link>
+        ) : (
+          <Link href="/dashboard/condominiums">
+            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg">
+              <Plus className="w-4 h-4" /> Cadastrar Condomínio Primeiro
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Cards de Métricas e Resumo */}
@@ -96,15 +113,23 @@ export default async function GlobalRequestsPage() {
       {enhancedRequests.length === 0 ? (
         <Card className="bg-slate-950 border-slate-800 text-white p-12 text-center rounded-2xl shadow-xl">
           <ClipboardList className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-200">Nenhuma solicitação criada</h3>
+          <h3 className="text-lg font-bold text-slate-200">Nenhuma solicitação criada ainda</h3>
           <p className="text-slate-400 text-sm max-w-md mx-auto mt-1 mb-6">
-            Acesse um dos seus condomínios cadastrados para criar novas solicitações com dossiê fotográfico e planilha BOQ.
+            Crie sua primeira solicitação de serviço com dossiê fotográfico e planilha BOQ para receber propostas de fornecedores.
           </p>
-          <Link href="/dashboard/condominiums">
-            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold">
-              Ver Meus Condomínios
-            </Button>
-          </Link>
+          {firstCondoId ? (
+            <Link href={`/dashboard/condominiums/${firstCondoId}/requests/new`}>
+              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-lg">
+                <Plus className="w-4 h-4" /> Criar Primeira Solicitação
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/dashboard/condominiums">
+              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-lg">
+                <Building2 className="w-4 h-4" /> Cadastrar Condomínio
+              </Button>
+            </Link>
+          )}
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

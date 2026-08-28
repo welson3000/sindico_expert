@@ -11,6 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
+import Link from 'next/link';
+import { Plus, ArrowRight, Save } from 'lucide-react';
 
 const FACADE_OPTIONS = ['Pastilha', 'Textura', 'Cerâmica', 'Grafiato', 'Pele de Vidro', 'Tijolo Aparente', 'Outro'];
 
@@ -22,9 +24,11 @@ interface TechSpecFormProps {
 export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
   const [isPending, startTransition] = useTransition();
 
-  let initialFacade = [];
+  let initialFacade: string[] = [];
   if (initialData?.facade_type) {
-    try { initialFacade = JSON.parse(initialData.facade_type); } catch (e) {}
+    try {
+      initialFacade = JSON.parse(initialData.facade_type);
+    } catch (e) {}
   }
 
   const form = useForm<CondoTechnicalSpecValues>({
@@ -52,45 +56,57 @@ export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
   const currentFacade = form.watch('facade_type') || [];
 
   return (
-    <Card>
+    <Card className="bg-slate-950 border-slate-800 text-white shadow-xl rounded-2xl overflow-hidden">
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CardContent className="space-y-6 pt-6">
-          <div className="space-y-4">
+        <CardContent className="space-y-6 p-6">
+          <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Total de Pavimentos</label>
-                <Input type="number" min={1} {...form.register('total_floors', { valueAsNumber: true })} />
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-300">Total de Pavimentos / Andares</label>
+                <Input
+                  type="number"
+                  min={1}
+                  {...form.register('total_floors', { valueAsNumber: true })}
+                  className="bg-slate-900 border-slate-800 text-white focus:border-indigo-500"
+                />
                 {form.formState.errors.total_floors && (
-                  <p className="text-xs text-red-500">{form.formState.errors.total_floors.message}</p>
+                  <p className="text-xs text-rose-400">{form.formState.errors.total_floors.message}</p>
                 )}
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Halls de Circulação Vertical / Elevadores</label>
-                <Input type="number" min={1} {...form.register('vertical_halls_count', { valueAsNumber: true })} />
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-300">Halls de Circulação Vertical / Elevadores</label>
+                <Input
+                  type="number"
+                  min={1}
+                  {...form.register('vertical_halls_count', { valueAsNumber: true })}
+                  className="bg-slate-900 border-slate-800 text-white focus:border-indigo-500"
+                />
                 {form.formState.errors.vertical_halls_count && (
-                  <p className="text-xs text-red-500">{form.formState.errors.vertical_halls_count.message}</p>
+                  <p className="text-xs text-rose-400">{form.formState.errors.vertical_halls_count.message}</p>
                 )}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Detalhamento dos Andares</label>
-              <Textarea 
-                placeholder="Ex: Térreo, 10 andares tipo, Barriletes, Caixa d'água" 
-                {...form.register('floor_breakdown')} 
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300">Detalhamento dos Andares</label>
+              <Textarea
+                placeholder="Ex: Térreo, 10 andares tipo, Barriletes, Caixa d'água"
+                {...form.register('floor_breakdown')}
+                className="bg-slate-900 border-slate-800 text-white focus:border-indigo-500 min-h-[70px]"
               />
               {form.formState.errors.floor_breakdown && (
-                <p className="text-xs text-red-500">{form.formState.errors.floor_breakdown.message}</p>
+                <p className="text-xs text-rose-400">{form.formState.errors.floor_breakdown.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Tipos de Acabamento da Fachada</label>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+              <label className="text-xs font-semibold text-slate-300 block">Tipos de Acabamento da Fachada</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                 {FACADE_OPTIONS.map((option) => (
                   <div key={option} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`facade-${option}`} 
+                    <Checkbox
+                      id={`facade-${option}`}
                       checked={currentFacade.includes(option)}
                       onCheckedChange={(checked) => {
                         if (checked) {
@@ -99,10 +115,11 @@ export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
                           form.setValue('facade_type', currentFacade.filter((f) => f !== option), { shouldValidate: true });
                         }
                       }}
+                      className="border-slate-700 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
                     />
-                    <label 
-                      htmlFor={`facade-${option}`} 
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    <label
+                      htmlFor={`facade-${option}`}
+                      className="text-xs font-medium text-slate-200 cursor-pointer select-none"
                     >
                       {option}
                     </label>
@@ -110,27 +127,44 @@ export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
                 ))}
               </div>
               {form.formState.errors.facade_type && (
-                <p className="text-xs text-red-500">{form.formState.errors.facade_type.message}</p>
+                <p className="text-xs text-rose-400">{form.formState.errors.facade_type.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Observações e Detalhes Estruturais</label>
-              <Textarea 
-                placeholder="Detalhes adicionais sobre a infraestrutura, elevadores, etc."
-                className="min-h-[100px]"
-                {...form.register('additional_details')} 
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-300">Observações e Detalhes Estruturais</label>
+              <Textarea
+                placeholder="Detalhes adicionais sobre a infraestrutura, acesso, elevadores, etc."
+                className="bg-slate-900 border-slate-800 text-white focus:border-indigo-500 min-h-[90px]"
+                {...form.register('additional_details')}
               />
               {form.formState.errors.additional_details && (
-                <p className="text-xs text-red-500">{form.formState.errors.additional_details.message}</p>
+                <p className="text-xs text-rose-400">{form.formState.errors.additional_details.message}</p>
               )}
             </div>
           </div>
         </CardContent>
-        <CardFooter className="sticky bottom-0 md:static bg-white border-t md:border-none p-4 z-10">
-          <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
+
+        <CardFooter className="bg-slate-900/80 border-t border-slate-800/80 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <Button
+            type="submit"
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2"
+            disabled={isPending}
+          >
+            <Save className="w-4 h-4" />
             {isPending ? 'Salvando...' : 'Salvar Ficha Técnica'}
           </Button>
+
+          <Link href={`/dashboard/condominiums/${condoId}/requests/new`} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4 text-indigo-400" />
+              Criar Solicitação para este Condomínio
+            </Button>
+          </Link>
         </CardFooter>
       </form>
     </Card>
