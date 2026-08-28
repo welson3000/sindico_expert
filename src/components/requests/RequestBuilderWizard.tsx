@@ -12,16 +12,61 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Camera, Plus, Trash2, ArrowRight, ArrowLeft, CheckCircle2, FileText, Layers, Calculator } from 'lucide-react';
+import { Camera, Plus, Trash2, ArrowRight, ArrowLeft, CheckCircle2, FileText, Calculator, Loader2 } from 'lucide-react';
 
 interface RequestBuilderWizardProps {
   condoId: string;
   techSpec?: any;
 }
 
+// Client-side Canvas Image Compression helper to compress mobile photos (e.g. 8MB -> 150KB)
+const compressImage = (file: File, maxWidth = 1200, maxHeight = 1200, quality = 0.7): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(dataUrl);
+      };
+      img.onerror = () => resolve(event.target?.result as string);
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+};
+
 export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizardProps) {
   const [step, setStep] = useState(1);
   const [isPending, startTransition] = useTransition();
+  const [isCompressing, setIsCompressing] = useState(false);
   const router = useRouter();
 
   const form = useForm<CreateRequestValues>({
@@ -43,24 +88,30 @@ export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizard
     name: 'items',
   });
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, sectionIndex: number) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>, sectionIndex: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64 = event.target?.result as string;
+    try {
+      setIsCompressing(true);
+      toast.info('Otimizando imagem para envio...');
+      const compressedBase64 = await compressImage(file);
+
       const currentPhotos = form.getValues(`sections.${sectionIndex}.photos`) || [];
-      form.setValue(`sections.${sectionIndex}.photos`, [...currentPhotos, { photo_url: base64, caption: '' }]);
-    };
-    reader.readAsDataURL(file);
+      form.setValue(`sections.${sectionIndex}.photos`, [...currentPhotos, { photo_url: compressedBase64, caption: '' }]);
+      toast.success('Foto otimizada e anexada!');
+    } catch (err) {
+      toast.error('Erro ao processar imagem.');
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   function onSubmit(values: CreateRequestValues) {
     startTransition(async () => {
       try {
         await createServiceRequest(condoId, values);
-        toast.success('Solicitação criada com sucesso!');
+        toast.success('Solicitação criada e publicada com sucesso!');
         router.push(`/dashboard/condominiums/${condoId}/requests`);
       } catch (err: any) {
         toast.error(err.message || 'Erro ao criar solicitação');
@@ -152,7 +203,7 @@ export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizard
                 <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
                   <Camera className="w-5 h-5 text-indigo-400" /> Passo 2: Dossiê Fotográfico & Seções
                 </h2>
-                <p className="text-xs text-slate-400">Adicione seções (ex: Fachada Norte, Barrilete) e fotos tiradas pelo celular.</p>
+                <p className="text-xs text-slate-400">Adicione seções (ex: Fachada Norte, Barrilete) e tire fotos pelo celular.</p>
               </div>
               <Button
                 type="button"
@@ -218,12 +269,17 @@ export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizard
                       ))}
 
                       <label className="border-2 border-dashed border-slate-800 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500 hover:bg-slate-900/60 aspect-square text-slate-400 transition-all">
-                        <Camera className="h-6 w-6 text-indigo-400 mb-1" />
-                        <span className="text-xs font-medium">Tirar Foto</span>
+                        {isCompressing ? (
+                          <Loader2 className="h-6 w-6 text-indigo-400 animate-spin" />
+                        ) : (
+                          <Camera className="h-6 w-6 text-indigo-400 mb-1" />
+                        )}
+                        <span className="text-xs font-medium">{isCompressing ? 'Processando...' : 'Tirar Foto'}</span>
                         <input
                           type="file"
                           accept="image/*"
                           capture="environment"
+                          disabled={isCompressing}
                           className="hidden"
                           onChange={(e) => handlePhotoUpload(e, sIndex)}
                         />
@@ -380,7 +436,8 @@ export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizard
               Próximo Passo <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
-            <Button type="submit" disabled={isPending} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 shadow-lg">
+            <Button type="submit" disabled={isPending} className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 shadow-lg gap-2">
+              {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {isPending ? 'Publicando Solicitação...' : 'Publicar para Cotação'}
             </Button>
           )}
