@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Plus, Save, ArrowLeft, Building2, Trash2 } from 'lucide-react';
 
 const FACADE_OPTIONS = ['Pastilha', 'Textura', 'Cerâmica', 'Grafiato', 'Pele de Vidro', 'Tijolo Aparente', 'Outro'];
@@ -23,6 +24,7 @@ interface TechSpecFormProps {
 }
 
 export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -64,16 +66,10 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
       try {
         await deleteCondoTechnicalSpec(condoId);
         toast.success('Ficha Técnica excluída com sucesso!');
-        form.reset({
-          total_floors: 1,
-          floor_breakdown: '',
-          facade_type: [],
-          vertical_halls_count: 1,
-          additional_details: '',
-        });
+        router.push('/dashboard/condominiums');
+        router.refresh();
       } catch (err: any) {
         toast.error(err.message || 'Erro ao excluir Ficha Técnica');
-      } finally {
         setIsDeleting(false);
       }
     });
