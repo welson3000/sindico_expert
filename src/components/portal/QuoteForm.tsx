@@ -179,15 +179,15 @@ export function QuoteForm({
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* 1. Header Fixo do Fornecedor & Status */}
-      <Card className="bg-slate-900 border-slate-800 text-white shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-900 p-6 border-b border-slate-800">
+      <Card className="bg-white border-slate-200 text-slate-900 shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-900 via-[#0E4B78] to-[#0E4B78] p-6 border-b border-sky-800 text-white">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-1">
+              <div className="flex items-center gap-2 text-orange-300 text-xs font-semibold uppercase tracking-wider mb-1">
                 <UserCheck className="w-4 h-4" /> Fornecedor Logado
               </div>
-              <h1 className="text-2xl font-bold text-slate-50">{supplierInfo.name}</h1>
-              <p className="text-sm text-slate-400 font-mono mt-0.5">CNPJ: {supplierInfo.document_cnpj_cpf}</p>
+              <h1 className="text-2xl font-bold text-white">{supplierInfo.name}</h1>
+              <p className="text-sm text-sky-100 font-mono mt-0.5">CNPJ: {supplierInfo.document_cnpj_cpf}</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -269,36 +269,36 @@ export function QuoteForm({
 
       {/* 2. Ficha Técnica do Edifício */}
       {techSpecs && (
-        <Card className="bg-slate-900 border-slate-800 text-white shadow-md">
-          <CardHeader className="pb-3 border-b border-slate-800">
-            <CardTitle className="text-lg font-semibold flex items-center gap-2 text-indigo-400">
+        <Card className="bg-white border-slate-200 text-slate-900 shadow-md">
+          <CardHeader className="pb-3 border-b border-slate-100">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2 text-blue-600">
               <Building className="w-5 h-5" /> Ficha Técnica do Condomínio
             </CardTitle>
-            <CardDescription className="text-slate-400 text-xs">
+            <CardDescription className="text-slate-500 text-xs">
               Especificações estruturais para auxílio na orçamentação e planejamento técnico.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
-              <span className="text-xs text-slate-400 block font-medium">Total de Andares/Pavimentos</span>
-              <span className="text-lg font-bold text-slate-100">{techSpecs.total_floors ?? 'Não informado'}</span>
+            <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+              <span className="text-xs text-slate-500 block font-medium">Total de Andares/Pavimentos</span>
+              <span className="text-lg font-bold text-slate-900">{techSpecs.total_floors ?? 'Não informado'}</span>
             </div>
-            <div className="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
-              <span className="text-xs text-slate-400 block font-medium">Prumadas/Halls Verticais</span>
-              <span className="text-lg font-bold text-slate-100">{techSpecs.vertical_halls_count ?? 'Não informado'}</span>
+            <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+              <span className="text-xs text-slate-500 block font-medium">Prumadas/Halls Verticais</span>
+              <span className="text-lg font-bold text-slate-900">{techSpecs.vertical_halls_count ?? 'Não informado'}</span>
             </div>
-            <div className="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
-              <span className="text-xs text-slate-400 block font-medium">Tipo de Fachada</span>
-              <span className="text-base font-semibold text-slate-100">{techSpecs.facade_type || 'Não informado'}</span>
+            <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+              <span className="text-xs text-slate-500 block font-medium">Tipo de Fachada</span>
+              <span className="text-base font-semibold text-slate-900">{techSpecs.facade_type || 'Não informado'}</span>
             </div>
-            <div className="bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
-              <span className="text-xs text-slate-400 block font-medium">Divisão dos Pavimentos</span>
-              <span className="text-base font-medium text-slate-200">{techSpecs.floor_breakdown || 'Padrão'}</span>
+            <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+              <span className="text-xs text-slate-500 block font-medium">Divisão dos Pavimentos</span>
+              <span className="text-base font-medium text-slate-800">{techSpecs.floor_breakdown || 'Padrão'}</span>
             </div>
             {techSpecs.additional_details && (
-              <div className="col-span-full bg-slate-950/60 p-3.5 rounded-lg border border-slate-800">
-                <span className="text-xs text-slate-400 block font-medium mb-1">Detalhes Técnicos Adicionais</span>
-                <p className="text-sm text-slate-300">{techSpecs.additional_details}</p>
+              <div className="col-span-full bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+                <span className="text-xs text-slate-500 block font-medium mb-1">Detalhes Técnicos Adicionais</span>
+                <p className="text-sm text-slate-700">{techSpecs.additional_details}</p>
               </div>
             )}
           </CardContent>
@@ -306,29 +306,29 @@ export function QuoteForm({
       )}
 
       {/* 3. Dossiê Fotográfico & Seções */}
-      <Card className="bg-slate-900 border-slate-800 text-white shadow-md">
-        <CardHeader className="pb-3 border-b border-slate-800">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2 text-indigo-400">
+      <Card className="bg-white border-slate-200 text-slate-900 shadow-md">
+        <CardHeader className="pb-3 border-b border-slate-100">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2 text-blue-600">
             <Camera className="w-5 h-5" /> Dossiê Fotográfico e Registros Técnicos
           </CardTitle>
-          <CardDescription className="text-slate-400 text-xs">
+          <CardDescription className="text-slate-500 text-xs">
             Examine as áreas de intervenção, patologias e fotos anexadas pelo Síndico. Clique na foto para dar zoom.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           {sections.length === 0 ? (
-            <p className="text-sm text-slate-500 italic">Nenhuma seção fotográfica cadastrada nesta solicitação.</p>
+            <p className="text-sm text-slate-400 italic">Nenhuma seção fotográfica cadastrada nesta solicitação.</p>
           ) : (
             sections.map((section, idx) => (
-              <div key={section.id} className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 space-y-3">
+              <div key={section.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
                 <div>
-                  <h3 className="text-base font-semibold text-slate-200 flex items-center gap-2">
-                    <span className="bg-indigo-900/60 text-indigo-300 text-xs font-mono px-2 py-0.5 rounded">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <span className="bg-blue-100 text-blue-800 text-xs font-mono px-2 py-0.5 rounded font-semibold">
                       Seção {idx + 1}
                     </span>
                     {section.title}
                   </h3>
-                  {section.description && <p className="text-sm text-slate-400 mt-1">{section.description}</p>}
+                  {section.description && <p className="text-sm text-slate-600 mt-1">{section.description}</p>}
                 </div>
 
                 {/* Galeria de fotos da seção */}
@@ -338,7 +338,7 @@ export function QuoteForm({
                       <div
                         key={photo.id}
                         onClick={() => setSelectedPhoto({ url: photo.photo_url, caption: photo.caption })}
-                        className="group relative cursor-pointer overflow-hidden rounded-lg border border-slate-800 bg-slate-900 hover:border-indigo-500 transition-all shadow-sm"
+                        className="group relative cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-100 hover:border-blue-500 transition-all shadow-sm"
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -350,7 +350,7 @@ export function QuoteForm({
                           Ampliar
                         </div>
                         {photo.caption && (
-                          <div className="p-1.5 text-xs text-slate-300 truncate bg-slate-900/90 border-t border-slate-800">
+                          <div className="p-1.5 text-xs text-slate-700 truncate bg-white border-t border-slate-200">
                             {photo.caption}
                           </div>
                         )}
@@ -358,7 +358,7 @@ export function QuoteForm({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-500 italic mt-1">Nenhuma foto cadastrada nesta seção.</p>
+                  <p className="text-xs text-slate-400 italic mt-1">Nenhuma foto cadastrada nesta seção.</p>
                 )}
               </div>
             ))
@@ -367,14 +367,14 @@ export function QuoteForm({
       </Card>
 
       {/* 4. Planilha Interativa de Preços (BOQ) */}
-      <Card className="bg-slate-900 border-slate-800 text-white shadow-xl">
-        <CardHeader className="pb-3 border-b border-slate-800">
+      <Card className="bg-white border-slate-200 text-slate-900 shadow-xl">
+        <CardHeader className="pb-3 border-b border-slate-100">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle className="text-lg font-semibold flex items-center gap-2 text-indigo-400">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2 text-blue-600">
                 <Calculator className="w-5 h-5" /> Planilha de Quantitativos e Cotação de Preços (BOQ)
               </CardTitle>
-              <CardDescription className="text-slate-400 text-xs mt-0.5">
+              <CardDescription className="text-slate-500 text-xs mt-0.5">
                 Informe o seu <strong>Preço Unitário (R$)</strong> para cada item. O total é calculado automaticamente em tempo real.
               </CardDescription>
             </div>

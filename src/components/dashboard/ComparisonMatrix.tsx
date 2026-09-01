@@ -79,18 +79,17 @@ export function ComparisonMatrix({
       {/* 1. Cards de Destaque Analítico */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:grid-cols-2">
         {/* Card 1: Proposta Vencedora Global */}
-        <Card className="bg-slate-900 border-slate-800 text-white shadow-xl relative overflow-hidden print:bg-white print:text-black print:border-slate-400">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none print:hidden" />
-          <CardHeader className="pb-3 border-b border-slate-800 print:border-slate-300">
+        <Card className="bg-white border-slate-200 text-slate-900 shadow-md relative overflow-hidden print:bg-white print:text-black print:border-slate-400">
+          <CardHeader className="pb-3 border-b border-slate-100 print:border-slate-300">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold text-amber-400 flex items-center gap-2 print:text-slate-900">
-                <Trophy className="w-5 h-5 text-amber-400 print:text-slate-900" /> Proposta Vencedora Global
+              <CardTitle className="text-base font-bold text-amber-600 flex items-center gap-2 print:text-slate-900">
+                <Trophy className="w-5 h-5 text-amber-500 print:text-slate-900" /> Proposta Vencedora Global
               </CardTitle>
-              <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 px-2.5 py-1 text-xs font-semibold print:bg-slate-200 print:text-slate-900 print:border-slate-400">
+              <Badge className="bg-amber-100 text-amber-800 border-amber-300 px-2.5 py-1 text-xs font-semibold print:bg-slate-200 print:text-slate-900 print:border-slate-400">
                 Menor Preço Global
               </Badge>
             </div>
-            <CardDescription className="text-slate-400 text-xs print:text-slate-600">
+            <CardDescription className="text-slate-500 text-xs print:text-slate-600">
               Fornecedor com o menor valor total para execução global da obra.
             </CardDescription>
           </CardHeader>
@@ -99,21 +98,21 @@ export function ComparisonMatrix({
             {globalWinner ? (
               <div className="space-y-4">
                 <div>
-                  <span className="text-xs text-slate-400 print:text-slate-600 font-medium block">Empresa Proponente</span>
-                  <h3 className="text-xl font-bold text-slate-100 print:text-slate-900">{globalWinner.supplier_name}</h3>
-                  <p className="text-xs font-mono text-slate-400 print:text-slate-700 mt-0.5">CNPJ: {globalWinner.supplier_cnpj}</p>
+                  <span className="text-xs text-slate-500 font-medium block">Empresa Fornecedora</span>
+                  <h3 className="text-xl font-bold text-slate-900">{globalWinner.supplier_name}</h3>
+                  <p className="text-xs font-mono text-slate-500">CNPJ: {globalWinner.supplier_cnpj}</p>
                 </div>
 
-                <div className="bg-amber-950/40 border border-amber-800/60 p-4 rounded-xl flex items-center justify-between print:bg-slate-100 print:border-slate-400">
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center justify-between">
                   <div>
-                    <span className="text-xs text-amber-300 print:text-slate-700 font-medium block uppercase">Valor Total Proposto</span>
-                    <span className="text-2xl font-black text-amber-300 print:text-slate-900">{formatCurrency(globalWinner.total_amount)}</span>
+                    <span className="text-xs text-amber-800 font-medium block uppercase">Valor Total Global</span>
+                    <span className="text-2xl font-black text-amber-700">{formatCurrency(globalWinner.total_amount)}</span>
                   </div>
-                  <CheckCircle2 className="w-8 h-8 text-amber-400 print:text-slate-800 shrink-0" />
+                  <CheckCircle2 className="w-8 h-8 text-amber-600" />
                 </div>
               </div>
             ) : (
-              <div className="text-center py-6 text-slate-500 italic text-sm">
+              <div className="text-center py-6 text-slate-400 italic text-sm">
                 Nenhuma proposta comercial submetida até o momento.
               </div>
             )}
@@ -121,48 +120,47 @@ export function ComparisonMatrix({
         </Card>
 
         {/* Card 2: Resumo de Economia Fracionada */}
-        <Card className="bg-slate-900 border-slate-800 text-white shadow-xl relative overflow-hidden print:bg-white print:text-black print:border-slate-400">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none print:hidden" />
-          <CardHeader className="pb-3 border-b border-slate-800 print:border-slate-300">
+        <Card className="bg-white border-slate-200 text-slate-900 shadow-md relative overflow-hidden print:bg-white print:text-black print:border-slate-400">
+          <CardHeader className="pb-3 border-b border-slate-100 print:border-slate-300">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold text-emerald-400 flex items-center gap-2 print:text-slate-900">
-                <TrendingDown className="w-5 h-5 text-emerald-400 print:text-slate-900" /> Resumo de Economia Fracionada
+              <CardTitle className="text-base font-bold text-emerald-600 flex items-center gap-2 print:text-slate-900">
+                <TrendingDown className="w-5 h-5 text-emerald-600 print:text-slate-900" /> Resumo de Economia Fracionada
               </CardTitle>
-              <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/40 px-2.5 py-1 text-xs font-semibold print:bg-slate-200 print:text-slate-900 print:border-slate-400">
+              <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 px-2.5 py-1 text-xs font-semibold print:bg-slate-200 print:text-slate-900 print:border-slate-400">
                 Contratação por Item
               </Badge>
             </div>
-            <CardDescription className="text-slate-400 text-xs print:text-slate-600">
+            <CardDescription className="text-slate-500 text-xs print:text-slate-600">
               Comparativo se a obra for fracionada contratando o menor preço item a item.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="p-6 space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-950/60 border border-slate-800 p-3 rounded-lg print:bg-slate-100 print:border-slate-300">
-                <span className="text-xs text-slate-400 print:text-slate-600 font-medium block">Contratação Global Única</span>
-                <span className="text-base font-bold text-slate-200 print:text-slate-900">
+              <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg print:bg-slate-100 print:border-slate-300">
+                <span className="text-xs text-slate-500 print:text-slate-600 font-medium block">Contratação Global Única</span>
+                <span className="text-base font-bold text-slate-800 print:text-slate-900">
                   {formatCurrency(fractionatedSummary.globalWinnerTotal)}
                 </span>
               </div>
 
-              <div className="bg-emerald-950/40 border border-emerald-800/60 p-3 rounded-lg print:bg-slate-100 print:border-slate-300">
-                <span className="text-xs text-emerald-300 print:text-slate-700 font-medium block">Menor Preço Item a Item</span>
-                <span className="text-base font-bold text-emerald-300 print:text-slate-900">
+              <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-lg print:bg-slate-100 print:border-slate-300">
+                <span className="text-xs text-emerald-800 print:text-slate-700 font-medium block">Menor Preço Item a Item</span>
+                <span className="text-base font-bold text-emerald-700 print:text-slate-900">
                   {formatCurrency(fractionatedSummary.fractionatedTotal)}
                 </span>
               </div>
             </div>
 
-            <div className="bg-emerald-950/60 border border-emerald-800 p-3.5 rounded-xl flex items-center justify-between print:bg-slate-100 print:border-slate-400">
+            <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl flex items-center justify-between print:bg-slate-100 print:border-slate-400">
               <div>
-                <span className="text-xs text-emerald-300 print:text-slate-700 font-medium block uppercase">Economia Potencial Extra</span>
-                <span className="text-xl font-extrabold text-emerald-300 print:text-slate-900">
+                <span className="text-xs text-emerald-800 print:text-slate-700 font-medium block uppercase">Economia Potencial Extra</span>
+                <span className="text-xl font-extrabold text-emerald-700 print:text-slate-900">
                   {formatCurrency(fractionatedSummary.potentialSavings)}
                 </span>
               </div>
               {fractionatedSummary.savingsPercentage > 0 && (
-                <Badge className="bg-emerald-500/30 text-emerald-200 border-emerald-400/50 text-xs font-mono font-bold print:bg-slate-300 print:text-slate-900">
+                <Badge className="bg-emerald-600 text-white border-emerald-700 text-xs font-mono font-bold print:bg-slate-300 print:text-slate-900">
                   -{fractionatedSummary.savingsPercentage}%
                 </Badge>
               )}
@@ -172,20 +170,20 @@ export function ComparisonMatrix({
       </div>
 
       {/* 2. Matriz Comparativa Completa */}
-      <Card className="bg-slate-900 border-slate-800 text-white shadow-xl overflow-hidden print:bg-white print:text-black print:border-slate-400">
-        <CardHeader className="pb-4 border-b border-slate-800 print:border-slate-300">
+      <Card className="bg-white border-slate-200 text-slate-900 shadow-xl overflow-hidden print:bg-white print:text-black print:border-slate-400">
+        <CardHeader className="pb-4 border-b border-slate-100 print:border-slate-300">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div>
-              <CardTitle className="text-lg font-bold text-slate-100 flex items-center gap-2 print:text-slate-900">
-                <Layers className="w-5 h-5 text-indigo-400 print:text-slate-900" /> Matriz Comparativa de Preços Lado a Lado
+              <CardTitle className="text-lg font-bold text-slate-900 flex items-center gap-2 print:text-slate-900">
+                <Layers className="w-5 h-5 text-blue-600 print:text-slate-900" /> Matriz Comparativa de Preços Lado a Lado
               </CardTitle>
-              <CardDescription className="text-slate-400 text-xs print:text-slate-600">
-                Análise comparativa das propostas comerciais. As células em <strong className="text-emerald-400 print:text-slate-900">verde</strong> destacam o menor preço unitário de cada item.
+              <CardDescription className="text-slate-500 text-xs print:text-slate-600">
+                Análise comparativa das propostas comerciais. As células em <strong className="text-emerald-700 print:text-slate-900">verde</strong> destacam o menor preço unitário de cada item.
               </CardDescription>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-slate-400 print:hidden">
-              <span className="inline-block w-3 h-3 bg-emerald-950/80 border border-emerald-600 rounded-sm" />
+            <div className="flex items-center gap-2 text-xs text-slate-500 print:hidden">
+              <span className="inline-block w-3 h-3 bg-emerald-100 border border-emerald-400 rounded-sm" />
               <span>Menor preço unitário do item</span>
             </div>
           </div>
@@ -193,17 +191,17 @@ export function ComparisonMatrix({
 
         <CardContent className="p-0 overflow-x-auto">
           {proposals.length === 0 ? (
-            <div className="text-center py-16 text-slate-500 italic text-sm">
+            <div className="text-center py-16 text-slate-400 italic text-sm">
               Nenhuma proposta recebida para esta solicitação.
             </div>
           ) : (
             <Table className="w-full min-w-[700px] border-collapse print:text-xs">
-              <TableHeader className="bg-slate-950/90 border-b border-slate-800 print:bg-slate-100 print:border-slate-400">
-                <TableRow className="border-slate-800 hover:bg-transparent print:border-slate-400">
-                  <TableHead className="text-slate-400 font-semibold w-10 text-center print:text-slate-900">#</TableHead>
-                  <TableHead className="text-slate-400 font-semibold min-w-[220px] print:text-slate-900">Especificação do Item</TableHead>
-                  <TableHead className="text-slate-400 font-semibold text-center w-16 print:text-slate-900">Qtd</TableHead>
-                  <TableHead className="text-slate-400 font-semibold text-center w-16 print:text-slate-900">Unid.</TableHead>
+              <TableHeader className="bg-slate-50 border-b border-slate-200 print:bg-slate-100 print:border-slate-400">
+                <TableRow className="border-slate-200 hover:bg-transparent print:border-slate-400">
+                  <TableHead className="text-slate-700 font-semibold w-10 text-center print:text-slate-900">#</TableHead>
+                  <TableHead className="text-slate-700 font-semibold min-w-[220px] print:text-slate-900">Especificação do Item</TableHead>
+                  <TableHead className="text-slate-700 font-semibold text-center w-16 print:text-slate-900">Qtd</TableHead>
+                  <TableHead className="text-slate-700 font-semibold text-center w-16 print:text-slate-900">Unid.</TableHead>
 
                   {/* Colunas dinâmicas para cada fornecedor (até 5) */}
                   {proposals.map((prop, index) => {
@@ -211,23 +209,23 @@ export function ComparisonMatrix({
                     return (
                       <TableHead
                         key={prop.id}
-                        className={`text-center min-w-[180px] p-3 border-l border-slate-800 print:border-slate-300 ${
-                          isWinner ? 'bg-amber-950/30 print:bg-slate-200' : ''
+                        className={`text-center min-w-[180px] p-3 border-l border-slate-200 print:border-slate-300 ${
+                          isWinner ? 'bg-amber-50 print:bg-slate-200' : ''
                         }`}
                       >
                         <div className="space-y-1">
                           <div className="flex items-center justify-center gap-1">
-                            <span className="text-xs font-mono font-bold text-slate-300 print:text-slate-900">
+                            <span className="text-xs font-mono font-bold text-slate-600 print:text-slate-900">
                               Proposta #{index + 1}
                             </span>
                             {isWinner && (
-                              <Trophy className="w-3.5 h-3.5 text-amber-400 print:text-slate-900" />
+                              <Trophy className="w-3.5 h-3.5 text-amber-500 print:text-slate-900" />
                             )}
                           </div>
-                          <div className="font-bold text-sm text-slate-100 print:text-slate-900 line-clamp-1">
+                          <div className="font-bold text-sm text-slate-900 print:text-slate-900 line-clamp-1">
                             {prop.supplier_name}
                           </div>
-                          <div className="text-[11px] font-mono text-slate-400 print:text-slate-700">
+                          <div className="text-[11px] font-mono text-slate-500 print:text-slate-700">
                             CNPJ: {prop.supplier_cnpj}
                           </div>
                         </div>
@@ -242,20 +240,20 @@ export function ComparisonMatrix({
                   const lowestInfo = lowestPricesByItem[item.id];
 
                   return (
-                    <TableRow key={item.id} className="border-slate-800 hover:bg-slate-850/40 print:border-slate-300">
-                      <TableCell className="text-center font-mono text-xs text-slate-400 print:text-slate-800">
+                    <TableRow key={item.id} className="border-slate-100 hover:bg-slate-50 print:border-slate-300">
+                      <TableCell className="text-center font-mono text-xs text-slate-500 print:text-slate-800">
                         {index + 1}
                       </TableCell>
                       <TableCell className="space-y-0.5">
-                        <div className="text-[11px] font-semibold text-indigo-400 print:text-slate-700">
+                        <div className="text-[11px] font-semibold text-blue-600 print:text-slate-700">
                           {item.category_title} {item.subcategory_title ? `/ ${item.subcategory_title}` : ''}
                         </div>
-                        <p className="text-xs font-medium text-slate-200 print:text-slate-900">{item.item_description}</p>
+                        <p className="text-xs font-medium text-slate-800 print:text-slate-900">{item.item_description}</p>
                       </TableCell>
-                      <TableCell className="text-center text-xs font-semibold text-slate-200 print:text-slate-900">
+                      <TableCell className="text-center text-xs font-semibold text-slate-800 print:text-slate-900">
                         {item.quantity}
                       </TableCell>
-                      <TableCell className="text-center text-[11px] font-mono text-slate-400 uppercase print:text-slate-700">
+                      <TableCell className="text-center text-[11px] font-mono text-slate-500 uppercase print:text-slate-700">
                         {item.unit}
                       </TableCell>
 
@@ -273,10 +271,10 @@ export function ComparisonMatrix({
                         return (
                           <TableCell
                             key={prop.id}
-                            className={`text-right font-mono text-xs p-3 border-l border-slate-800 print:border-slate-300 transition-colors ${
+                            className={`text-right font-mono text-xs p-3 border-l border-slate-100 print:border-slate-300 transition-colors ${
                               isLowest
-                                ? 'bg-emerald-950/70 text-emerald-200 border-emerald-700/60 font-bold print:bg-slate-200 print:text-slate-900 print:border-slate-400'
-                                : 'text-slate-300 print:text-slate-900'
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold print:bg-slate-200 print:text-slate-900 print:border-slate-400'
+                                : 'text-slate-700 print:text-slate-900'
                             }`}
                           >
                             <div className="text-xs">
@@ -294,9 +292,9 @@ export function ComparisonMatrix({
               </TableBody>
 
               {/* Rodapé da Tabela com o Total Global de Cada Fornecedor */}
-              <tfoot className="bg-slate-950 border-t-2 border-slate-800 print:bg-slate-100 print:border-slate-400">
-                <TableRow className="border-slate-800 print:border-slate-400">
-                  <TableCell colSpan={4} className="p-4 text-right font-bold text-sm text-slate-200 print:text-slate-900">
+              <tfoot className="bg-slate-50 border-t-2 border-slate-200 print:bg-slate-100 print:border-slate-400">
+                <TableRow className="border-slate-200 print:border-slate-400">
+                  <TableCell colSpan={4} className="p-4 text-right font-bold text-sm text-slate-900 print:text-slate-900">
                     VALOR TOTAL GLOBAL DA PROPOSTA:
                   </TableCell>
 
@@ -305,15 +303,15 @@ export function ComparisonMatrix({
                     return (
                       <TableCell
                         key={prop.id}
-                        className={`text-right p-4 font-mono font-extrabold text-base border-l border-slate-800 print:border-slate-400 ${
+                        className={`text-right p-4 font-mono font-extrabold text-base border-l border-slate-200 print:border-slate-400 ${
                           isWinner
-                            ? 'bg-amber-950/60 text-amber-300 print:bg-slate-300 print:text-slate-900'
-                            : 'text-slate-100 print:text-slate-900'
+                            ? 'bg-amber-100 text-amber-800 print:bg-slate-300 print:text-slate-900'
+                            : 'text-slate-900 print:text-slate-900'
                         }`}
                       >
                         {formatCurrency(prop.total_amount)}
                         {isWinner && (
-                          <div className="text-[10px] text-amber-400 font-sans font-semibold uppercase mt-0.5 print:text-slate-800">
+                          <div className="text-[10px] text-amber-700 font-sans font-semibold uppercase mt-0.5 print:text-slate-800">
                             ★ Vencedor Global
                           </div>
                         )}

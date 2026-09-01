@@ -66,25 +66,25 @@ export default async function GlobalRequestsPage() {
   return (
     <div className="space-y-8">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 flex items-center gap-3">
-            <ClipboardList className="w-7 h-7 text-indigo-400" /> Todas as Solicitações de Serviço
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <ClipboardList className="w-7 h-7 text-blue-600" /> Todas as Solicitações de Serviço
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 text-sm mt-1">
             Acompanhe todas as cotações abertas, propostas recebidas de fornecedores e mapas comparativos dos seus condomínios.
           </p>
         </div>
 
         {firstCondoId ? (
           <Link href={`/dashboard/condominiums/${firstCondoId}/requests/new`}>
-            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-md cursor-pointer">
               <Plus className="w-4 h-4" /> Nova Solicitação
             </Button>
           </Link>
         ) : (
           <Link href="/dashboard/condominiums">
-            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-md cursor-pointer">
               <Plus className="w-4 h-4" /> Cadastrar Condomínio Primeiro
             </Button>
           </Link>
@@ -93,39 +93,39 @@ export default async function GlobalRequestsPage() {
 
       {/* Cards de Métricas e Resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-slate-950 border-slate-800 text-white p-5 rounded-2xl shadow-xl">
-          <span className="text-xs text-slate-400 font-medium block">Total de Solicitações</span>
-          <span className="text-2xl font-bold text-slate-100 mt-1 block">{enhancedRequests.length}</span>
+        <Card className="bg-white border-slate-200 text-slate-900 p-5 rounded-2xl shadow-md">
+          <span className="text-xs text-slate-500 font-medium block">Total de Solicitações</span>
+          <span className="text-2xl font-bold text-slate-900 mt-1 block">{enhancedRequests.length}</span>
         </Card>
 
-        <Card className="bg-slate-950 border-slate-800 text-white p-5 rounded-2xl shadow-xl">
-          <span className="text-xs text-indigo-300 font-medium block">Em Cotação Aberta</span>
-          <span className="text-2xl font-bold text-indigo-400 mt-1 block">{openCount}</span>
+        <Card className="bg-white border-slate-200 text-slate-900 p-5 rounded-2xl shadow-md">
+          <span className="text-xs text-blue-600 font-medium block">Em Cotação Aberta</span>
+          <span className="text-2xl font-bold text-blue-600 mt-1 block">{openCount}</span>
         </Card>
 
-        <Card className="bg-slate-950 border-slate-800 text-white p-5 rounded-2xl shadow-xl">
-          <span className="text-xs text-emerald-300 font-medium block">Propostas Recebidas</span>
-          <span className="text-2xl font-bold text-emerald-400 mt-1 block">{totalProposalsAccumulated}</span>
+        <Card className="bg-white border-slate-200 text-slate-900 p-5 rounded-2xl shadow-md">
+          <span className="text-xs text-emerald-600 font-medium block">Propostas Recebidas</span>
+          <span className="text-2xl font-bold text-emerald-600 mt-1 block">{totalProposalsAccumulated}</span>
         </Card>
       </div>
 
       {/* Lista de Solicitações */}
       {enhancedRequests.length === 0 ? (
-        <Card className="bg-slate-950 border-slate-800 text-white p-12 text-center rounded-2xl shadow-xl">
-          <ClipboardList className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-200">Nenhuma solicitação criada ainda</h3>
-          <p className="text-slate-400 text-sm max-w-md mx-auto mt-1 mb-6">
+        <Card className="bg-white border-slate-200 text-slate-800 p-12 text-center rounded-2xl shadow-md">
+          <ClipboardList className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+          <h3 className="text-lg font-bold text-slate-800">Nenhuma solicitação criada ainda</h3>
+          <p className="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-6">
             Crie sua primeira solicitação de serviço com dossiê fotográfico e planilha BOQ para receber propostas de fornecedores.
           </p>
           {firstCondoId ? (
             <Link href={`/dashboard/condominiums/${firstCondoId}/requests/new`}>
-              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-lg">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-md cursor-pointer">
                 <Plus className="w-4 h-4" /> Criar Primeira Solicitação
               </Button>
             </Link>
           ) : (
             <Link href="/dashboard/condominiums">
-              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-lg">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold flex items-center gap-2 mx-auto px-6 py-2.5 rounded-xl shadow-md cursor-pointer">
                 <Building2 className="w-4 h-4" /> Cadastrar Condomínio
               </Button>
             </Link>
@@ -136,19 +136,19 @@ export default async function GlobalRequestsPage() {
           {enhancedRequests.map((req) => (
             <Card
               key={req.id}
-              className="bg-slate-950 border-slate-800 text-white flex flex-col justify-between rounded-2xl shadow-xl hover:border-slate-700 transition-all overflow-hidden"
+              className="bg-white border-slate-200 text-slate-900 flex flex-col justify-between rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden hover:border-slate-300"
             >
               <CardHeader className="p-5 pb-3 space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/40 text-xs px-2.5 py-0.5">
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-2.5 py-0.5 font-semibold">
                     {req.status === 'OPEN' ? 'Cotação Aberta' : req.status}
                   </Badge>
 
                   <Badge
                     className={
                       req.proposalsCount > 0
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 text-xs font-mono'
-                        : 'bg-slate-800 text-slate-400 text-xs font-mono'
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-200 text-xs font-mono font-semibold'
+                        : 'bg-slate-100 text-slate-600 border-slate-200 text-xs font-mono'
                     }
                   >
                     {req.proposalsCount} {req.proposalsCount === 1 ? 'Proposta' : 'Propostas'}
@@ -156,25 +156,25 @@ export default async function GlobalRequestsPage() {
                 </div>
 
                 <div>
-                  <CardTitle className="text-lg font-bold text-slate-100 line-clamp-2">{req.title}</CardTitle>
-                  <CardDescription className="text-xs text-slate-400 flex items-center gap-1.5 mt-1">
-                    <Building2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  <CardTitle className="text-lg font-bold text-slate-900 line-clamp-2">{req.title}</CardTitle>
+                  <CardDescription className="text-xs text-slate-500 flex items-center gap-1.5 mt-1">
+                    <Building2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                     <span className="truncate">{req.condoName}</span>
                   </CardDescription>
                 </div>
               </CardHeader>
 
-              <CardContent className="px-5 py-2 text-xs text-slate-400 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <CardContent className="px-5 py-2 text-xs text-slate-500 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                 <span>Criada em: {req.created_at ? new Date(req.created_at).toLocaleDateString('pt-BR') : 'Hoje'}</span>
               </CardContent>
 
-              <CardFooter className="p-4 bg-slate-900/60 border-t border-slate-800/80">
+              <CardFooter className="p-4 bg-slate-50/80 border-t border-slate-100">
                 <Link
                   href={`/dashboard/condominiums/${req.condominium_id}/requests/${req.id}/comparison`}
                   className="w-full"
                 >
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl h-10 gap-2 shadow-md">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl h-10 gap-2 shadow-md cursor-pointer">
                     <BarChart3 className="w-4 h-4" /> Ver Mapa Comparativo <ArrowRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>
