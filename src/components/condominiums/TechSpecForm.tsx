@@ -57,19 +57,26 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
     });
   }
 
-  function handleDelete() {
-    if (!confirm('Tem certeza que deseja excluir esta Ficha Técnica? Essa ação não poderá ser desfeita.')) {
+  function handleClear() {
+    if (!confirm('Tem certeza que deseja limpar os dados desta Ficha Técnica?')) {
       return;
     }
     setIsDeleting(true);
     startTransition(async () => {
       try {
         await deleteCondoTechnicalSpec(condoId);
-        toast.success('Ficha Técnica excluída com sucesso!');
-        router.push('/dashboard/condominiums');
+        toast.success('Ficha Técnica limpa com sucesso!');
+        form.reset({
+          total_floors: 1,
+          floor_breakdown: '',
+          facade_type: [],
+          vertical_halls_count: 1,
+          additional_details: '',
+        });
         router.refresh();
       } catch (err: any) {
-        toast.error(err.message || 'Erro ao excluir Ficha Técnica');
+        toast.error(err.message || 'Erro ao limpar Ficha Técnica');
+      } finally {
         setIsDeleting(false);
       }
     });
@@ -212,16 +219,17 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
             type="button"
             variant="outline"
             disabled={isPending || isDeleting}
-            onClick={handleDelete}
+            onClick={handleClear}
             className="border-rose-600/70 bg-rose-950/30 hover:bg-rose-600 text-rose-400 hover:text-white flex items-center gap-2 text-xs sm:text-sm px-4 py-2 rounded-xl transition-colors cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
-            {isDeleting ? 'Excluindo...' : 'Excluir Esta Ficha Técnica'}
+            {isDeleting ? 'Limpando...' : 'Limpar Ficha Técnica Predial'}
           </Button>
         </CardFooter>
       </Card>
     </form>
   );
 }
+
 
 
