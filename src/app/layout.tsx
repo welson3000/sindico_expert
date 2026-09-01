@@ -22,7 +22,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#0f172a',
+  themeColor: '#0E4B78',
 };
 
 export default function RootLayout({
@@ -31,11 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} dark h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans">
+    <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-slate-100 text-slate-900 font-sans">
         {children}
         <Toaster position="top-right" richColors />
       </body>
     </html>
   );
 }
+

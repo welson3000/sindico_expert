@@ -40,9 +40,9 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-100">Meus Condomínios</h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Você tem <strong className="text-slate-200">{initialCondominiums.length}</strong> condomínio(s) cadastrado(s)
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Meus Condomínios</h1>
+          <p className="text-slate-600 text-sm mt-1">
+            Você tem <strong className="text-slate-900">{initialCondominiums.length}</strong> condomínio(s) cadastrado(s)
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
               className={
                 isDeleteMode
                   ? "bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg cursor-pointer transition-colors"
-                  : "border-rose-800/80 bg-rose-950/30 hover:bg-rose-900/60 text-rose-400 hover:text-rose-200 font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
+                  : "border-rose-300 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white font-semibold text-xs sm:text-sm px-4 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
               }
             >
               {isDeleteMode ? (
@@ -80,19 +80,19 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
       </div>
 
       {isDeleteMode && (
-        <div className="bg-rose-950/40 border border-rose-800/60 text-rose-300 px-4 py-3 rounded-xl text-xs sm:text-sm flex items-center justify-between gap-2 animate-in fade-in duration-200">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl text-xs sm:text-sm flex items-center justify-between gap-2 animate-in fade-in duration-200 shadow-sm">
           <span className="flex items-center gap-2 font-medium">
-            <Trash2 className="h-4 w-4 text-rose-400 shrink-0" />
+            <Trash2 className="h-4 w-4 text-rose-600 shrink-0" />
             Modo de exclusão ativo. Clique no ícone de lixeira do condomínio que deseja remover.
           </span>
         </div>
       )}
 
       {initialCondominiums.length === 0 ? (
-        <Card className="bg-slate-950/80 border-slate-800 text-white p-12 text-center flex flex-col items-center justify-center rounded-2xl shadow-xl">
-          <Building2 className="h-12 w-12 text-slate-600 mb-3" />
-          <h3 className="text-lg font-bold text-slate-200">Nenhum condomínio cadastrado</h3>
-          <p className="text-slate-400 text-sm max-w-sm mt-1 mb-6">
+        <Card className="bg-white border-slate-200 text-slate-800 p-12 text-center flex flex-col items-center justify-center rounded-2xl shadow-md">
+          <Building2 className="h-12 w-12 text-slate-400 mb-3" />
+          <h3 className="text-lg font-bold text-slate-800">Nenhum condomínio cadastrado</h3>
+          <p className="text-slate-500 text-sm max-w-sm mt-1 mb-6">
             Comece adicionando o seu primeiro condomínio para montar fichas técnicas e solicitações de serviço.
           </p>
           <CreateCondominiumSheet />
@@ -105,13 +105,13 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
             return (
               <Card
                 key={condo.id}
-                className={`bg-slate-950 border-slate-800 text-white flex flex-col justify-between rounded-2xl shadow-xl transition-all overflow-hidden relative ${
-                  isDeleteMode ? 'border-rose-900/60 ring-1 ring-rose-900/40' : 'hover:border-slate-700'
+                className={`bg-white border-slate-200 text-slate-800 flex flex-col justify-between rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden relative ${
+                  isDeleteMode ? 'border-rose-300 ring-2 ring-rose-200' : 'hover:border-slate-300'
                 }`}
               >
                 <CardHeader className="p-5 pb-3">
                   <div className="flex items-start justify-between gap-3">
-                    <CardTitle className="text-lg font-bold text-slate-100 leading-tight">
+                    <CardTitle className="text-lg font-bold text-slate-900 leading-tight">
                       {condo.name}
                     </CardTitle>
 
@@ -119,8 +119,8 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
                       <Badge
                         className={
                           hasSpec
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 text-xs px-2.5 py-0.5 font-semibold'
-                            : 'bg-amber-500/20 text-amber-300 border-amber-500/40 text-xs px-2.5 py-0.5 font-semibold'
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300 text-xs px-2.5 py-0.5 font-semibold'
+                            : 'bg-amber-100 text-amber-800 border-amber-300 text-xs px-2.5 py-0.5 font-semibold'
                         }
                       >
                         {hasSpec ? 'Completa' : 'Pendente'}
@@ -140,21 +140,21 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-400 font-medium line-clamp-2 mt-1.5">
+                  <p className="text-xs text-slate-500 font-medium line-clamp-2 mt-1.5">
                     {condo.address}
                   </p>
                 </CardHeader>
 
-                <CardFooter className="p-4 bg-slate-900/60 border-t border-slate-800/80 gap-2 flex flex-col sm:flex-row">
+                <CardFooter className="p-4 bg-slate-50/80 border-t border-slate-100 gap-2 flex flex-col sm:flex-row">
                   <Link
                     href={`/dashboard/condominiums/${condo.id}/tech-spec`}
                     className={buttonVariants({
                       variant: 'outline',
                       className:
-                        'w-full border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-xs rounded-xl h-10 gap-1.5',
+                        'w-full border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs rounded-xl h-10 gap-1.5 shadow-sm',
                     })}
                   >
-                    <FileText className="h-3.5 w-3.5 text-indigo-400" />
+                    <FileText className="h-3.5 w-3.5 text-blue-600" />
                     Ficha Técnica
                   </Link>
 
@@ -162,7 +162,7 @@ export function CondominiumsClient({ initialCondominiums }: CondominiumsClientPr
                     href={`/dashboard/condominiums/${condo.id}/requests`}
                     className={buttonVariants({
                       className:
-                        'w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl h-10 gap-1.5 shadow-md',
+                        'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl h-10 gap-1.5 shadow-md',
                     })}
                   >
                     <ClipboardList className="h-3.5 w-3.5" />
