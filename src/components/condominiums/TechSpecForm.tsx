@@ -5,23 +5,24 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { condoTechnicalSpecSchema, CondoTechnicalSpecValues } from '@/schemas/condominium.schema';
 import { upsertCondoTechnicalSpec } from '@/services/condominium.service';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { Plus, ArrowRight, Save } from 'lucide-react';
+import { Plus, Save, ArrowLeft, Building2 } from 'lucide-react';
 
 const FACADE_OPTIONS = ['Pastilha', 'Textura', 'Cerâmica', 'Grafiato', 'Pele de Vidro', 'Tijolo Aparente', 'Outro'];
 
 interface TechSpecFormProps {
   condoId: string;
+  condoName: string;
   initialData?: any;
 }
 
-export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
+export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormProps) {
   const [isPending, startTransition] = useTransition();
 
   let initialFacade: string[] = [];
@@ -56,8 +57,48 @@ export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
   const currentFacade = form.watch('facade_type') || [];
 
   return (
-    <Card className="bg-slate-950 border-slate-800 text-white shadow-xl rounded-2xl overflow-hidden">
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl mx-auto h-full flex flex-col space-y-6">
+      {/* Header section with title and relocated action buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard/condominiums"
+            className={buttonVariants({ variant: 'ghost', size: 'icon', className: 'text-slate-400 hover:text-white hover:bg-slate-800' })}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
+              <Building2 className="w-6 h-6 text-indigo-400" /> Ficha Técnica Predial
+            </h1>
+            <p className="text-slate-400 text-sm mt-0.5">{condoName}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
+          <Link href={`/dashboard/condominiums/${condoId}/requests/new`}>
+            <Button
+              type="button"
+              variant="outline"
+              className="border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white flex items-center gap-2 text-xs sm:text-sm px-4 py-2 rounded-xl"
+            >
+              <Plus className="w-4 h-4 text-indigo-400" />
+              Criar Solicitação para este Condomínio
+            </Button>
+          </Link>
+
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 text-xs sm:text-sm px-4 py-2 rounded-xl shadow-lg cursor-pointer"
+          >
+            <Save className="w-4 h-4" />
+            {isPending ? 'Salvando...' : 'Salvar Ficha Técnica'}
+          </Button>
+        </div>
+      </div>
+
+      <Card className="bg-slate-950 border-slate-800 text-white shadow-xl rounded-2xl overflow-hidden">
         <CardContent className="space-y-6 p-6">
           <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -144,29 +185,8 @@ export function TechSpecForm({ condoId, initialData }: TechSpecFormProps) {
             </div>
           </div>
         </CardContent>
-
-        <CardFooter className="bg-slate-900/80 border-t border-slate-800/80 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <Button
-            type="submit"
-            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2"
-            disabled={isPending}
-          >
-            <Save className="w-4 h-4" />
-            {isPending ? 'Salvando...' : 'Salvar Ficha Técnica'}
-          </Button>
-
-          <Link href={`/dashboard/condominiums/${condoId}/requests/new`} className="w-full sm:w-auto">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4 text-indigo-400" />
-              Criar Solicitação para este Condomínio
-            </Button>
-          </Link>
-        </CardFooter>
-      </form>
-    </Card>
+      </Card>
+    </form>
   );
 }
+
