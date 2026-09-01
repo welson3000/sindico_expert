@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth';
 import { db } from '@/db';
-import { condominiums, condo_technical_specs } from '@/db/schema';
+import { condominiums, condo_technical_specs, service_requests } from '@/db/schema';
 import { eq, desc, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { CreateCondominiumValues, CondoTechnicalSpecValues, createCondominiumSchema, condoTechnicalSpecSchema } from '@/schemas/condominium.schema';
@@ -134,4 +134,34 @@ export async function deleteCondoTechnicalSpec(condoId: string) {
 
   return { success: true };
 }
+
+export async function deleteCondominium(condoId: string) {
+  const organization_id = await validateAuth();
+
+  // Verify ownership
+  const condo = await db.query.condominiums.findFirst({
+    where: and(
+      eq(condominiums.id, condoId),
+      eq(condominiums.organization_id, organization_id)
+    ),
+  });
+
+  if (!condo) {
+    throw new Error('Condominium not found or access denied');
+  }
+
+  // 1. Delete technical specs
+  await db.delete(condo_technical_specs).where(eq(condo_technical_specs.condominium_id, condoId));
+
+  // 2. Delete service requests (which will cascade to sections, items, proposals)
+  await db.delete(service_requests).where(eq(service_requests.condominium_id, condoId));
+
+  // 3. Delete condominium
+  await db.delete(condominiums).where(eq(condominiums.id, condoId));
+
+  revalidatePath('/dashboard/condominiums');
+
+  return { success: true };
+}
+
 
