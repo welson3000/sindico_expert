@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, integer, decimal, pgEnum, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, integer, decimal, pgEnum, timestamp, boolean } from 'drizzle-orm/pg-core';
 
 export const roleEnum = pgEnum('role', ['ADMIN_SINDICO', 'ADMIN_ADM', 'FORNECEDOR']);
 export const statusEnum = pgEnum('status', ['DRAFT', 'OPEN', 'CLOSED', 'CANCELLED']);
@@ -107,3 +107,15 @@ export const proposal_items = pgTable('proposal_items', {
   total_price: decimal('total_price', { precision: 12, scale: 2 }).notNull(),
   created_at: timestamp('created_at').defaultNow(),
 });
+
+export const project_roadmap_items = pgTable('project_roadmap_items', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  phase: text('phase').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  is_completed: boolean('is_completed').default(false).notNull(),
+  order: integer('order').default(0),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
+});
+
