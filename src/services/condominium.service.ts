@@ -111,3 +111,27 @@ export async function upsertCondoTechnicalSpec(condoId: string, data: CondoTechn
   
   return { success: true };
 }
+
+export async function deleteCondoTechnicalSpec(condoId: string) {
+  const organization_id = await validateAuth();
+
+  const condo = await db.query.condominiums.findFirst({
+    where: and(
+      eq(condominiums.id, condoId),
+      eq(condominiums.organization_id, organization_id)
+    ),
+  });
+
+  if (!condo) {
+    throw new Error('Condominium not found or access denied');
+  }
+
+  await db.delete(condo_technical_specs)
+    .where(eq(condo_technical_specs.condominium_id, condoId));
+
+  revalidatePath(`/dashboard/condominiums/${condoId}/tech-spec`);
+  revalidatePath('/dashboard/condominiums');
+
+  return { success: true };
+}
+

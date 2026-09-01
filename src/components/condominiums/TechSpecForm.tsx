@@ -4,15 +4,15 @@ import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { condoTechnicalSpecSchema, CondoTechnicalSpecValues } from '@/schemas/condominium.schema';
-import { upsertCondoTechnicalSpec } from '@/services/condominium.service';
+import { upsertCondoTechnicalSpec, deleteCondoTechnicalSpec } from '@/services/condominium.service';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { Plus, Save, ArrowLeft, Building2 } from 'lucide-react';
+import { Plus, Save, ArrowLeft, Building2, Trash2 } from 'lucide-react';
 
 const FACADE_OPTIONS = ['Pastilha', 'Textura', 'Cerâmica', 'Grafiato', 'Pele de Vidro', 'Tijolo Aparente', 'Outro'];
 
@@ -24,6 +24,7 @@ interface TechSpecFormProps {
 
 export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   let initialFacade: string[] = [];
   if (initialData?.facade_type) {
@@ -50,6 +51,30 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
         toast.success('Ficha Técnica salva com sucesso!');
       } catch (err: any) {
         toast.error(err.message || 'Erro ao salvar Ficha Técnica');
+      }
+    });
+  }
+
+  function handleDelete() {
+    if (!confirm('Tem certeza que deseja excluir esta Ficha Técnica? Essa ação não poderá ser desfeita.')) {
+      return;
+    }
+    setIsDeleting(true);
+    startTransition(async () => {
+      try {
+        await deleteCondoTechnicalSpec(condoId);
+        toast.success('Ficha Técnica excluída com sucesso!');
+        form.reset({
+          total_floors: 1,
+          floor_breakdown: '',
+          facade_type: [],
+          vertical_halls_count: 1,
+          additional_details: '',
+        });
+      } catch (err: any) {
+        toast.error(err.message || 'Erro ao excluir Ficha Técnica');
+      } finally {
+        setIsDeleting(false);
       }
     });
   }
@@ -89,7 +114,7 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
 
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || isDeleting}
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center gap-2 text-xs sm:text-sm px-4 py-2 rounded-xl shadow-lg cursor-pointer"
           >
             <Save className="w-4 h-4" />
@@ -185,8 +210,22 @@ export function TechSpecForm({ condoId, condoName, initialData }: TechSpecFormPr
             </div>
           </div>
         </CardContent>
+
+        <CardFooter className="bg-slate-900/40 border-t border-slate-800/80 p-4 flex items-center justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={isPending || isDeleting}
+            onClick={handleDelete}
+            className="border-rose-600/70 bg-rose-950/30 hover:bg-rose-600 text-rose-400 hover:text-white flex items-center gap-2 text-xs sm:text-sm px-4 py-2 rounded-xl transition-colors cursor-pointer"
+          >
+            <Trash2 className="w-4 h-4" />
+            {isDeleting ? 'Excluindo...' : 'Excluir Esta Ficha Técnica'}
+          </Button>
+        </CardFooter>
       </Card>
     </form>
   );
 }
+
 
