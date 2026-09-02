@@ -63,6 +63,7 @@ interface QuoteFormProps {
     id: string;
     name: string;
     email: string;
+    phone?: string;
     document_cnpj_cpf: string;
   };
   proposalsCount: number;
@@ -184,10 +185,16 @@ export function QuoteForm({
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 text-orange-300 text-xs font-semibold uppercase tracking-wider mb-1">
-                <UserCheck className="w-4 h-4" /> Fornecedor Logado
+                <UserCheck className="w-4 h-4" /> Fornecedor Logado & Cadastrado
               </div>
               <h1 className="text-2xl font-bold text-white">{supplierInfo.name}</h1>
-              <p className="text-sm text-sky-100 font-mono mt-0.5">CNPJ: {supplierInfo.document_cnpj_cpf}</p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-sky-100 mt-1 font-mono">
+                <span>CNPJ: <strong>{supplierInfo.document_cnpj_cpf}</strong></span>
+                <span>•</span>
+                <span>Contato: <strong>{supplierInfo.name}</strong></span>
+                <span>•</span>
+                <span>Tel: <strong>{supplierInfo.phone || 'Não informado'}</strong></span>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">

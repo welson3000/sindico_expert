@@ -125,6 +125,7 @@ export async function getQuoteDetailsForSupplier(requestId: string) {
       id: user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone || 'Telefone Não Informado',
       document_cnpj_cpf: user.document_cnpj_cpf || 'CNPJ Não Informado',
     },
     proposalsCount,

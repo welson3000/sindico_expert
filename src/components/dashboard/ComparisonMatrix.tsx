@@ -222,11 +222,17 @@ export function ComparisonMatrix({
                               <Trophy className="w-3.5 h-3.5 text-amber-500 print:text-slate-900" />
                             )}
                           </div>
-                          <div className="font-bold text-sm text-slate-900 print:text-slate-900 line-clamp-1">
+                          <div className="font-bold text-sm text-slate-900 print:text-slate-900 line-clamp-1" title={prop.supplier_name}>
                             {prop.supplier_name}
                           </div>
-                          <div className="text-[11px] font-mono text-slate-500 print:text-slate-700">
+                          <div className="text-[11px] font-mono text-slate-600 print:text-slate-700">
                             CNPJ: {prop.supplier_cnpj}
+                          </div>
+                          <div className="text-[11px] text-slate-500 print:text-slate-700">
+                            Contato: <strong className="text-slate-700">{prop.contact_name}</strong>
+                          </div>
+                          <div className="text-[11px] font-mono text-slate-500 print:text-slate-700">
+                            Tel: {prop.supplier_phone}
                           </div>
                         </div>
                       </TableHead>

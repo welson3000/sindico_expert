@@ -24,6 +24,8 @@ export interface ProposalComparisonData {
   supplier_id: string;
   supplier_name: string;
   supplier_cnpj: string;
+  contact_name: string;
+  supplier_phone: string;
   total_amount: number;
   status: string;
   created_at: Date | null;
@@ -75,6 +77,15 @@ export async function getRequestComparison(requestId: string) {
   });
 
   const proposalIds = submittedProposals.map((p) => p.id);
+  const supplierIds = Array.from(new Set(submittedProposals.map((p) => p.supplier_id)));
+
+  let usersMap = new Map<string, { name: string; phone: string | null }>();
+  if (supplierIds.length > 0) {
+    const supplierUsers = await db.query.users.findMany({
+      where: (u, { inArray }) => inArray(u.id, supplierIds),
+    });
+    usersMap = new Map(supplierUsers.map((u) => [u.id, { name: u.name, phone: u.phone }]));
+  }
 
   // 5. Fetch Proposal Items for all submitted proposals
   let proposalItemsList: typeof proposal_items.$inferSelect[] = [];
@@ -88,6 +99,7 @@ export async function getRequestComparison(requestId: string) {
   const proposalsWithItems: ProposalComparisonData[] = submittedProposals.map((prop) => {
     const propItems = proposalItemsList.filter((pi) => pi.proposal_id === prop.id);
     const itemsMap: Record<string, { unit_price: number; total_price: number }> = {};
+    const supplierUser = usersMap.get(prop.supplier_id);
 
     for (const pi of propItems) {
       itemsMap[pi.request_item_id] = {
@@ -101,6 +113,8 @@ export async function getRequestComparison(requestId: string) {
       supplier_id: prop.supplier_id,
       supplier_name: prop.supplier_name,
       supplier_cnpj: prop.supplier_cnpj,
+      contact_name: supplierUser?.name || prop.supplier_name,
+      supplier_phone: supplierUser?.phone || 'Não informado',
       total_amount: Number(prop.total_amount) || 0,
       status: prop.status,
       created_at: prop.created_at,

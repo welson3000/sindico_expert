@@ -355,19 +355,27 @@ export function RequestBuilderWizard({ condoId, techSpec }: RequestBuilderWizard
                           className="bg-white border-slate-300 text-slate-900 text-xs focus:border-blue-500"
                         />
                       </TableCell>
-                      <TableCell className="p-3">
+                      <TableCell className="p-3 w-28">
                         <Input
-                          placeholder="m², un, kg"
+                          placeholder="m²"
+                          maxLength={4}
                           {...form.register(`items.${index}.unit`)}
-                          className="bg-white border-slate-300 text-slate-900 text-xs text-center font-mono focus:border-blue-500"
+                          className="bg-white border-slate-300 text-slate-900 text-xs text-center font-mono focus:border-blue-500 w-24 mx-auto"
                         />
                       </TableCell>
-                      <TableCell className="p-3">
+                      <TableCell className="p-3 w-32">
                         <Input
                           type="number"
-                          step="0.01"
+                          min={0}
+                          max={9999}
+                          placeholder="0"
+                          onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                            if (e.currentTarget.value.length > 4) {
+                              e.currentTarget.value = e.currentTarget.value.slice(0, 4);
+                            }
+                          }}
                           {...form.register(`items.${index}.quantity`, { valueAsNumber: true })}
-                          className="bg-white border-slate-300 text-slate-900 text-xs text-center font-mono font-bold focus:border-blue-500"
+                          className="bg-white border-slate-300 text-slate-900 text-xs text-center font-mono font-bold focus:border-blue-500 w-28 mx-auto"
                         />
                       </TableCell>
                       <TableCell className="p-3 text-center">

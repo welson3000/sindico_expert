@@ -122,10 +122,24 @@ const DEFAULT_ROADMAP_ITEMS = [
   },
   {
     phase: 'Fase 5: Perfil, Acessibilidade & Guia de Evolução',
-    title: 'Guia de Evolução do Projeto (Roadmap Interativo)',
-    description: 'Painel acessível em todo o tempo no menu lateral para acompanhamento de etapas e novos recursos.',
+    title: 'Visibilidade Mobile do Botão de Cadastro de Condomínio',
+    description: 'Ajuste no cabeçalho e contêiner mobile garantindo visibilidade total do botão "+ Novo Condomínio".',
     is_completed: true,
-    order: 16,
+    order: 17,
+  },
+  {
+    phase: 'Fase 5: Perfil, Acessibilidade & Guia de Evolução',
+    title: 'Limites do BOQ: Unidade (Até 4 caracteres) & Quantidade (Até 4 números)',
+    description: 'Validação e formatação dos campos de Unidade e Quantidade na Planilha Quantitativa.',
+    is_completed: true,
+    order: 18,
+  },
+  {
+    phase: 'Fase 5: Perfil, Acessibilidade & Guia de Evolução',
+    title: 'Detalhamento do Fornecedor (Empresa, CNPJ, Contato, Telefone) na BOQ e Matriz',
+    description: 'Preenchimento automático dos dados cadastrais do perfil do fornecedor na planilha de cotação e cabeçalho do mapa comparativo.',
+    is_completed: true,
+    order: 19,
   },
 
   // Fase 6 (Próximas melhorias / Expansão)
@@ -164,6 +178,16 @@ export async function listRoadmapItems() {
       items = await db.query.project_roadmap_items.findMany({
         orderBy: [asc(project_roadmap_items.order), asc(project_roadmap_items.created_at)],
       });
+    } else {
+      // Check if new default items need to be added
+      const existingTitles = new Set(items.map((i) => i.title));
+      const missingItems = DEFAULT_ROADMAP_ITEMS.filter((i) => !existingTitles.has(i.title));
+      if (missingItems.length > 0) {
+        await db.insert(project_roadmap_items).values(missingItems);
+        items = await db.query.project_roadmap_items.findMany({
+          orderBy: [asc(project_roadmap_items.order), asc(project_roadmap_items.created_at)],
+        });
+      }
     }
 
     return items;
