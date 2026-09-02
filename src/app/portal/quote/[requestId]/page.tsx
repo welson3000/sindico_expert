@@ -1,4 +1,6 @@
 import React from 'react';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import { getQuoteDetailsForSupplier } from '@/services/proposal.service';
 import { QuoteForm } from '@/components/portal/QuoteForm';
 import Link from 'next/link';
@@ -11,6 +13,11 @@ interface QuotePageProps {
 
 export default async function SupplierQuotePage({ params }: QuotePageProps) {
   const { requestId } = await params;
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect(`/login?callbackUrl=/portal/quote/${requestId}`);
+  }
 
   try {
     const data = await getQuoteDetailsForSupplier(requestId);

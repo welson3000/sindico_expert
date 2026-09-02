@@ -141,6 +141,13 @@ const DEFAULT_ROADMAP_ITEMS = [
     is_completed: true,
     order: 19,
   },
+  {
+    phase: 'Fase 5: Perfil, Acessibilidade & Guia de Evolução',
+    title: 'Recurso de Acesso Direto para Fornecedores com Copiar Link da Cotação',
+    description: 'Botões "Copiar Link p/ Fornecedores" e "Ver visão do fornecedor" em cada card de solicitação com redirecionamento para login/cadastro.',
+    is_completed: true,
+    order: 20,
+  },
 
   // Fase 6 (Próximas melhorias / Expansão)
   {

@@ -7,6 +7,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plus, BarChart3, FileText, Clock } from 'lucide-react';
+import { ShareQuoteButton } from '@/components/requests/ShareQuoteButton';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -92,10 +93,12 @@ export default async function RequestsPage({ params }: PageProps) {
                 </CardDescription>
               </CardHeader>
 
-              <CardFooter className="pt-4 border-t border-slate-800">
+              <CardFooter className="p-4 bg-slate-50 border-t border-slate-100 flex flex-col gap-3">
+                <ShareQuoteButton requestId={req.id} title={req.title} />
+
                 <Link href={`/dashboard/condominiums/${id}/requests/${req.id}/comparison`} className="w-full">
-                  <Button className="w-full bg-slate-800 hover:bg-slate-700 text-slate-100 gap-2">
-                    <BarChart3 className="w-4 h-4 text-indigo-400" /> Ver Mapa Comparativo
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl h-10 gap-2 shadow-md cursor-pointer">
+                    <BarChart3 className="w-4 h-4 text-white" /> Ver Mapa Comparativo
                   </Button>
                 </Link>
               </CardFooter>

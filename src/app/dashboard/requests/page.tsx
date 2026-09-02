@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ClipboardList, Building2, BarChart3, Clock, Plus, ArrowRight } from 'lucide-react';
+import { ShareQuoteButton } from '@/components/requests/ShareQuoteButton';
 
 export default async function GlobalRequestsPage() {
   const session = await auth();
@@ -169,7 +170,9 @@ export default async function GlobalRequestsPage() {
                 <span>Criada em: {req.created_at ? new Date(req.created_at).toLocaleDateString('pt-BR') : 'Hoje'}</span>
               </CardContent>
 
-              <CardFooter className="p-4 bg-slate-50/80 border-t border-slate-100">
+              <CardFooter className="p-4 bg-slate-50/80 border-t border-slate-100 flex flex-col gap-3">
+                <ShareQuoteButton requestId={req.id} title={req.title} />
+
                 <Link
                   href={`/dashboard/condominiums/${req.condominium_id}/requests/${req.id}/comparison`}
                   className="w-full"
