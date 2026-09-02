@@ -47,11 +47,9 @@ export function CreateCondominiumSheet() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button type="button" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md cursor-pointer flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          <span>Novo Condomínio</span>
-        </Button>
+      <DialogTrigger className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md cursor-pointer flex items-center gap-2">
+        <Plus className="h-4 w-4" />
+        <span>Novo Condomínio</span>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md bg-white border-slate-200 text-slate-900 p-6 rounded-2xl shadow-2xl">
