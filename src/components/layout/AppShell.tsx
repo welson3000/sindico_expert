@@ -37,7 +37,7 @@ export function AppShell({ children, user }: AppShellProps) {
   return (
     <div className="min-h-screen bg-[#F4F7FA] text-slate-900 flex flex-col md:flex-row antialiased">
       {/* Mobile Header */}
-      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-16 bg-[#0E4B78] text-white backdrop-blur shadow-md">
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-16 bg-[#0E4B78] text-white backdrop-blur shadow-md print:hidden">
         <div className="flex items-center gap-2">
           <Sheet>
             <SheetTrigger>
@@ -96,7 +96,7 @@ export function AppShell({ children, user }: AppShellProps) {
       </header>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-[#0E4B78] border-r border-sky-900/60 h-screen sticky top-0 text-white shadow-xl">
+      <aside className="hidden md:flex flex-col w-64 bg-[#0E4B78] border-r border-sky-900/60 h-screen sticky top-0 text-white shadow-xl print:hidden">
         <div className="p-4 border-b border-sky-800/80 h-16 flex items-center gap-2">
           <ShieldCheck className="w-6 h-6 text-orange-400" />
           <span className="font-bold text-xl text-white">
@@ -142,12 +142,12 @@ export function AppShell({ children, user }: AppShellProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 pb-16 md:pb-0 overflow-y-auto bg-[#F4F7FA] text-slate-800">
-        <div className="p-4 md:p-8">{children}</div>
+      <main className="flex-1 pb-16 md:pb-0 overflow-y-auto bg-[#F4F7FA] text-slate-800 print:bg-white print:overflow-visible print:p-0">
+        <div className="p-4 md:p-8 print:p-0">{children}</div>
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-[#0E4B78] border-t border-sky-800 flex justify-around p-2 pb-safe z-30 shadow-2xl">
+      <nav className="md:hidden fixed bottom-0 w-full bg-[#0E4B78] border-t border-sky-800 flex justify-around p-2 pb-safe z-30 shadow-2xl print:hidden">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
