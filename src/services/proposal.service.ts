@@ -137,78 +137,76 @@ export async function getQuoteDetailsForSupplier(requestId: string) {
 }
 
 export async function submitProposal(data: SubmitProposalValues) {
-  const user = await validateSupplierAuth();
-  const parsed = submitProposalSchema.parse(data);
+  try {
+    const user = await validateSupplierAuth();
+    const parsed = submitProposalSchema.parse(data);
 
-  // 1. Fetch request to check status and max suppliers limit
-  const request = await db.query.service_requests.findFirst({
-    where: eq(service_requests.id, parsed.requestId),
-  });
+    // 1. Fetch request to check status and max suppliers limit
+    const request = await db.query.service_requests.findFirst({
+      where: eq(service_requests.id, parsed.requestId),
+    });
 
-  if (!request) {
-    throw new Error('Solicitação de serviço não encontrada');
-  }
-
-  if (request.status !== 'OPEN') {
-    throw new Error('Esta solicitação não está aberta para recebimento de propostas.');
-  }
-
-  // 2. Check if supplier already submitted a proposal
-  const existingProposal = await db.query.proposals.findFirst({
-    where: and(
-      eq(proposals.request_id, parsed.requestId),
-      eq(proposals.supplier_id, user.id)
-    ),
-  });
-
-  if (existingProposal) {
-    throw new Error('Você já enviou uma proposta comercial para esta solicitação.');
-  }
-
-  // 3. Check 5-supplier limit
-  const proposalsCountResult = await db
-    .select({ total: count() })
-    .from(proposals)
-    .where(eq(proposals.request_id, parsed.requestId));
-
-  const proposalsCount = Number(proposalsCountResult[0]?.total || 0);
-  const maxSuppliers = request.max_suppliers ?? 5;
-
-  if (proposalsCount >= maxSuppliers) {
-    throw new Error(`Limite máximo de ${maxSuppliers} fornecedores atingido para esta solicitação.`);
-  }
-
-  // 4. Fetch request items to calculate amounts accurately on backend
-  const reqItems = await db.query.request_items.findMany({
-    where: eq(request_items.request_id, parsed.requestId),
-  });
-
-  const reqItemsMap = new Map(reqItems.map((item) => [item.id, Number(item.quantity)]));
-
-  // Compute total proposal amount and item totals
-  let calculatedGrandTotal = 0;
-  const itemsToInsert = parsed.items.map((item) => {
-    const qty = reqItemsMap.get(item.request_item_id);
-    if (qty === undefined) {
-      throw new Error(`Item da solicitação ${item.request_item_id} não encontrado`);
+    if (!request) {
+      return { success: false, error: 'Solicitação de serviço não encontrada' };
     }
-    const itemTotal = Number((qty * item.unit_price).toFixed(2));
-    calculatedGrandTotal += itemTotal;
 
-    return {
-      request_item_id: item.request_item_id,
-      unit_price: item.unit_price.toFixed(2),
-      total_price: itemTotal.toFixed(2),
-    };
-  });
+    if (request.status !== 'OPEN') {
+      return { success: false, error: 'Esta solicitação não está aberta para recebimento de propostas.' };
+    }
 
-  const finalGrandTotal = calculatedGrandTotal.toFixed(2);
+    // 2. Check if supplier already submitted a proposal
+    const existingProposal = await db.query.proposals.findFirst({
+      where: and(
+        eq(proposals.request_id, parsed.requestId),
+        eq(proposals.supplier_id, user.id)
+      ),
+    });
 
-  // 5. Execute transaction atomically
-  let createdProposalId = '';
+    if (existingProposal) {
+      return { success: false, error: 'Você já enviou uma proposta comercial para esta solicitação.' };
+    }
 
-  await db.transaction(async (tx) => {
-    const [newProposal] = await tx
+    // 3. Check 5-supplier limit
+    const proposalsCountResult = await db
+      .select({ total: count() })
+      .from(proposals)
+      .where(eq(proposals.request_id, parsed.requestId));
+
+    const proposalsCount = Number(proposalsCountResult[0]?.total || 0);
+    const maxSuppliers = request.max_suppliers ?? 5;
+
+    if (proposalsCount >= maxSuppliers) {
+      return { success: false, error: `Limite máximo de ${maxSuppliers} fornecedores atingido para esta solicitação.` };
+    }
+
+    // 4. Fetch request items to calculate amounts accurately on backend
+    const reqItems = await db.query.request_items.findMany({
+      where: eq(request_items.request_id, parsed.requestId),
+    });
+
+    const reqItemsMap = new Map(reqItems.map((item) => [item.id, Number(item.quantity)]));
+
+    // Compute total proposal amount and item totals
+    let calculatedGrandTotal = 0;
+    const itemsToInsert = parsed.items.map((item) => {
+      const qty = reqItemsMap.get(item.request_item_id);
+      if (qty === undefined) {
+        throw new Error(`Item da solicitação ${item.request_item_id} não encontrado`);
+      }
+      const itemTotal = Number((qty * item.unit_price).toFixed(2));
+      calculatedGrandTotal += itemTotal;
+
+      return {
+        request_item_id: item.request_item_id,
+        unit_price: item.unit_price.toFixed(2),
+        total_price: itemTotal.toFixed(2),
+      };
+    });
+
+    const finalGrandTotal = calculatedGrandTotal.toFixed(2);
+
+    // 5. Execute sequential inserts (neon-http driver does not support interactive db.transaction)
+    const [newProposal] = await db
       .insert(proposals)
       .values({
         request_id: parsed.requestId,
@@ -220,20 +218,27 @@ export async function submitProposal(data: SubmitProposalValues) {
       })
       .returning();
 
-    createdProposalId = newProposal.id;
+    if (itemsToInsert.length > 0) {
+      const proposalItemsValues = itemsToInsert.map((item) => ({
+        proposal_id: newProposal.id,
+        request_item_id: item.request_item_id,
+        unit_price: item.unit_price,
+        total_price: item.total_price,
+      }));
 
-    const proposalItemsValues = itemsToInsert.map((item) => ({
-      proposal_id: newProposal.id,
-      request_item_id: item.request_item_id,
-      unit_price: item.unit_price,
-      total_price: item.total_price,
-    }));
+      await db.insert(proposal_items).values(proposalItemsValues);
+    }
 
-    await tx.insert(proposal_items).values(proposalItemsValues);
-  });
+    revalidatePath(`/portal/quote/${parsed.requestId}`);
+    revalidatePath('/portal/mural');
 
-  revalidatePath(`/portal/quote/${parsed.requestId}`);
-  revalidatePath('/portal/mural');
-
-  return { success: true, proposalId: createdProposalId };
+    return { success: true, proposalId: newProposal.id };
+  } catch (err: any) {
+    console.error('Error submitting proposal:', err);
+    return {
+      success: false,
+      error: err?.message || 'Erro ao processar o envio da proposta comercial.',
+    };
+  }
 }
+

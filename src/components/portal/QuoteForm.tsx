@@ -169,6 +169,9 @@ export function QuoteForm({
         if (result.success) {
           toast.success('Proposta comercial enviada com sucesso!');
           setIsConfirmOpen(false);
+        } else {
+          toast.error(result.error || 'Erro ao enviar proposta comercial.');
+          setIsConfirmOpen(false);
         }
       } catch (err: any) {
         toast.error(err.message || 'Erro ao enviar proposta comercial.');
