@@ -26,7 +26,15 @@ export default async function RequestComparisonPage({ params }: ComparisonPagePr
             </Button>
           </Link>
 
-          <PrintButton />
+          <PrintButton
+            request={data.request}
+            condo={data.condo}
+            items={data.items}
+            proposals={data.proposals}
+            globalWinner={data.globalWinner}
+            lowestPricesByItem={data.lowestPricesByItem}
+            fractionatedSummary={data.fractionatedSummary}
+          />
         </div>
 
         {/* Título da Página */}
