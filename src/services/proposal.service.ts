@@ -16,6 +16,7 @@ import {
 import { eq, and, count } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { submitProposalSchema, SubmitProposalValues } from '@/schemas/proposal.schema';
+import { sendProposalReceivedAlertToSindico } from './notification.service';
 
 async function validateSupplierAuth() {
   const session = await auth();
@@ -227,6 +228,30 @@ export async function submitProposal(data: SubmitProposalValues) {
       }));
 
       await db.insert(proposal_items).values(proposalItemsValues);
+    }
+
+    // Trigger notification to the Síndico who created the request
+    const createdByUserId = request.created_by;
+    if (createdByUserId) {
+      const sindicoUser = await db.query.users.findFirst({
+        where: eq(users.id, createdByUserId),
+      });
+
+      if (sindicoUser?.email) {
+        const condo = await db.query.condominiums.findFirst({
+          where: eq(condominiums.id, request.condominium_id),
+        });
+
+        sendProposalReceivedAlertToSindico({
+          sindicoEmail: sindicoUser.email,
+          requestTitle: request.title,
+          condoName: condo?.name || 'Condomínio',
+          supplierName: user.name,
+          totalAmountStr: `R$ ${finalGrandTotal}`,
+          currentProposalsCount: proposalsCount + 1,
+          maxSuppliers,
+        }).catch((err) => console.error('Erro ao notificar síndico:', err));
+      }
     }
 
     revalidatePath(`/portal/quote/${parsed.requestId}`);

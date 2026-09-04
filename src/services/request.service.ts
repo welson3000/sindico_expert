@@ -6,6 +6,7 @@ import { service_requests, request_sections, section_photos, request_items, cond
 import { eq, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { CreateRequestValues, createRequestSchema } from '@/schemas/request.schema';
+import { sendNewQuoteAlertToSuppliers } from './notification.service';
 
 async function validateAuth() {
   const session = await auth();
@@ -105,9 +106,19 @@ export async function createServiceRequest(condoId: string, data: CreateRequestV
     await db.insert(request_items).values(itemsToInsert);
   }
 
+  // Automatic Notification Alert for registered suppliers
+  sendNewQuoteAlertToSuppliers({
+    requestId,
+    title: parsed.title,
+    condoName: condo.name,
+    condoAddress: condo.address,
+    maxSuppliers: 5,
+  }).catch((err) => console.error('Erro ao disparar alertas por e-mail no cadastro:', err));
+
   revalidatePath(`/dashboard/condominiums/${condoId}/requests`);
   revalidatePath('/dashboard/requests');
   revalidatePath('/portal/mural');
 
   return { success: true, requestId };
 }
+
