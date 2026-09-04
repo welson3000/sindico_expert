@@ -154,7 +154,7 @@ const DEFAULT_ROADMAP_ITEMS = [
     phase: 'Fase 6: Recursos Futuros & Expansão',
     title: 'Exportação do Mapa Comparativo em PDF Executivo',
     description: 'Geração de relatório profissional formatado em PDF para apresentação em assembleias de condomínio.',
-    is_completed: false,
+    is_completed: true,
     order: 17,
   },
   {
@@ -175,6 +175,12 @@ const DEFAULT_ROADMAP_ITEMS = [
 
 export async function listRoadmapItems() {
   try {
+    // Sync completed status for newly implemented features
+    await db
+      .update(project_roadmap_items)
+      .set({ is_completed: true, updated_at: new Date() })
+      .where(eq(project_roadmap_items.title, 'Exportação do Mapa Comparativo em PDF Executivo'));
+
     let items = await db.query.project_roadmap_items.findMany({
       orderBy: [asc(project_roadmap_items.order), asc(project_roadmap_items.created_at)],
     });
