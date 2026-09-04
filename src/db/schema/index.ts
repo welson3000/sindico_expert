@@ -119,3 +119,29 @@ export const project_roadmap_items = pgTable('project_roadmap_items', {
   updated_at: timestamp('updated_at').defaultNow(),
 });
 
+export const supplier_reviews = pgTable('supplier_reviews', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  supplier_id: uuid('supplier_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  sindico_id: uuid('sindico_id').notNull().references(() => users.id),
+  sindico_name: text('sindico_name').notNull(),
+  service_request_id: uuid('service_request_id').references(() => service_requests.id),
+  rating_quality: integer('rating_quality').notNull().default(5),
+  rating_punctuality: integer('rating_punctuality').notNull().default(5),
+  rating_pricing: integer('rating_pricing').notNull().default(5),
+  overall_rating: decimal('overall_rating', { precision: 3, scale: 2 }).notNull().default('5.00'),
+  comment: text('comment'),
+  created_at: timestamp('created_at').defaultNow(),
+});
+
+export const supplier_completed_works = pgTable('supplier_completed_works', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  supplier_id: uuid('supplier_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  condo_name: text('condo_name').notNull(),
+  completion_date: timestamp('completion_date').defaultNow(),
+  total_value: decimal('total_value', { precision: 12, scale: 2 }),
+  scope_description: text('scope_description'),
+  created_at: timestamp('created_at').defaultNow(),
+});
+
+

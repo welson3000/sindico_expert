@@ -168,7 +168,7 @@ const DEFAULT_ROADMAP_ITEMS = [
     phase: 'Fase 6: Recursos Futuros & Expansão',
     title: 'Módulo de Gestão & Avaliação de Fornecedores',
     description: 'Ranking de pontuação, histórico de obras entregues e avaliações dos síndicos.',
-    is_completed: false,
+    is_completed: true,
     order: 19,
   },
 ];
@@ -185,6 +185,11 @@ export async function listRoadmapItems() {
       .update(project_roadmap_items)
       .set({ is_completed: true, updated_at: new Date() })
       .where(eq(project_roadmap_items.title, 'Notificações Automáticas via WhatsApp & E-mail'));
+
+    await db
+      .update(project_roadmap_items)
+      .set({ is_completed: true, updated_at: new Date() })
+      .where(eq(project_roadmap_items.title, 'Módulo de Gestão & Avaliação de Fornecedores'));
 
     let items = await db.query.project_roadmap_items.findMany({
       orderBy: [asc(project_roadmap_items.order), asc(project_roadmap_items.created_at)],

@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Building2, ClipboardList, User, LogOut, Menu, ShieldCheck, TrendingUp } from 'lucide-react';
+import { Building2, ClipboardList, User, LogOut, Menu, ShieldCheck, TrendingUp, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { signOut } from 'next-auth/react';
@@ -30,6 +30,7 @@ export function AppShell({ children, user }: AppShellProps) {
     : [
         { href: '/dashboard/condominiums', label: 'Condomínios', icon: Building2 },
         { href: '/dashboard/requests', label: 'Solicitações', icon: ClipboardList },
+        { href: '/dashboard/suppliers', label: 'Fornecedores', icon: Award },
         { href: '/dashboard/profile', label: 'Perfil', icon: User },
         { href: '/dashboard/roadmap', label: 'Evolução do Projeto', icon: TrendingUp },
       ];
